@@ -9,6 +9,8 @@ var UserSchema = new Schema({
   email: mongoose.SchemaTypes.Email,
   name: String,
   mentor: Boolean,
+  last_asked: Date,
+  created: Date,
   tags: [String]
 });
 

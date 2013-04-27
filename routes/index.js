@@ -1,12 +1,21 @@
-var User = require('../db/User');
+var User = require('../db/user'),
+    Question = require('../db/question'),
+    nodemailer = require('nodemailer'),
+    mailer = nodemailer.createTransport('sendmail'),
+    hbs = require('hbs'),
+    fs = require('fs'),
+    path = require('path'),
+    source = fs.readFileSync(path.join(__dirname, '../views/email-question.txt'), 'utf8'),
+    emailTemplate = hbs.handlebars.compile(source);
 
 module.exports = function (app) {
   app.get('/', function (req, res) {
-    res.render('home');
+    res.render('index');
   });
 
-  app.post('/user', function (req, res) {
+  app.post('/home', function (req, res) {
     var user = new User(req.body.user, function (err) {
+      console.log('user created', user);
       if (err) {
         res.render('error', {
           message: 'Creating your user kinda blew up. Sorry, look for the cat to make things better.'
@@ -19,5 +28,46 @@ module.exports = function (app) {
 
   app.get('/ask', function (req, res) {
     res.render('ask');
+  });
+
+  app.post('/post', function (req, res) {
+    var tag = req.body.question.tag,
+        now = Date.now();
+    var question = new Question(req.body.question, function (err, question) {
+      if (!err) {
+        // find a mentor that matches the tag
+        var query = User.findOne({ tags: tag });
+        query.sort({ last_asked: { $lt: now } });
+        query.exec(function (err, user) {
+          if (user) {
+            user.last_asked = now;
+            user.save();
+
+            var body = template({
+              user: user,
+              question: question
+            }, {});
+
+            // send email to that person
+            console.log('Sending question to ' + user.name);
+            mailer.sendMail({
+              from: "Freybors <cat@domentoring>",
+              to: user.name + ' <' + user.email + '>',
+              subject: 'Your mentoring skills are required',
+              text: body
+            });
+          }
+        });
+      }
+    });
+    res.render('ask');
+  });
+
+  app.get('/reply', function (req, res) {
+    res.render('reply');
+  });
+
+  app.post('/reply', function (req, res) {
+    res.render('reply');
   });
 };

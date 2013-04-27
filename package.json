@@ -12,6 +12,7 @@
     "oauth": "~0.9.10",
     "mongoose": "~3.6.8",
     "mongoose-types": "~1.0.3",
-    "hbs": "~2.1.0"
+    "hbs": "~2.1.0",
+    "nodemailer": "~0.4.1"
   }
 }

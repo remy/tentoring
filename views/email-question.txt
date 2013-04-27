@@ -1,0 +1,3 @@
+Hi {{user.name}},
+
+You've been asked for your mentoring 
