@@ -22,3 +22,12 @@
 body, html {
   background-color: #e8e5e2;
 }
+
+.big-header-thing {
+  margin-bottom: 2em;
+  text-align: center;
+}
+
+.chzn-container .chzn-choices .search-field {
+  padding: 7px !important;
+}

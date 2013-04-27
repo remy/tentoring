@@ -1,26 +1,42 @@
 extends layout
 
 block content
-  h1= settings.title
-  h3 Startup people giving each other ten minutes.
+  .big-header-thing
+    h1= settings.title
+    h3 Startup people giving each other ten minutes.
+    p Ask a quick question. We email one of our mentors. They get ten minutes to answer.
 
   form(method="post", action="/")
-    fieldset
-      div.row.collapse
-        div.small-3.large-2.columns
-          label.prefix(for="email") email
-        div.small-9.large-10.columns
-          input#email(name="email", type="email", required=true)
-      div.row.collapse
-        div.small-3.large-2.columns
-          label.radius.prefix(for="name") name
-        div.small-9.large-10.columns
-          input#name(name="name", type="text", required=true)
-      div.row.collapse
-        div.small-3.large-2.columns
-          label.prefix(for="tags") skills
-        div.small-9.large-10.columns
-          input#tags(name="tags", type="text", required=true)
-
-
-        input.button(type="submit", value="Sign up")
+    div.row
+      div.large-8.columns.large-offset-2
+        div.row.collapse
+          div.small-3.large-2.columns
+            label.prefix(for="email") Email
+          div.small-9.large-10.columns
+            input#email(name="email", type="email", required=true)
+        div.row.collapse
+          div.small-3.large-2.columns
+            label.radius.prefix(for="name") Name
+          div.small-9.large-10.columns
+            input#name(name="name", type="text", required=true)
+        div.row.collapse
+          div.small-3.large-2.columns
+            label.prefix(for="tags") Skills
+          div.small-9.large-10.columns
+            select.chosen(multiple="true",name="tags")
+              option(value="Funding") Funding
+              option(value="Legal") Legal
+              option(value="Technology") Technology
+              option(value="Design") Design
+              option(value="Marketing") Marketing
+              option(value="Product") Product
+              option(value="Social") Social
+              option(value="Government") Government
+              option(value="Introductions") Introductions
+              option(value="Strategy") Strategy
+              option(value="Cats") Cats
+        div.row.collapse
+          p
+            &nbsp;
+          p
+            input.button.large.success.expand(type="submit", value="Join in!")
