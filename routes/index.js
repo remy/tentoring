@@ -136,7 +136,7 @@ module.exports = function (app) {
   });
 
   // 404
-  app.get('*', function(req, res){
+  app.get('/cat', function(req, res){
     res.render('error', {
       message: 'Whoa, nothing found, sorry. Cat?'
     });
