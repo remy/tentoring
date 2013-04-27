@@ -62,7 +62,7 @@ module.exports = function (app) {
     });
   });
 
-  app.post('/ask', function (req, res) {
+  app.post('/ask', function (req, res, next) {
     var tag = req.body.tag,
         now = Date.now();
 
@@ -73,13 +73,14 @@ module.exports = function (app) {
     };
 
     var question = new Question(body).save(function (err, question) {
-      console.log(err, question);
+      var tried = 0;
       if (!err) {
         // find a mentor that matches the tag
         var query = User.findOne({ tags: tag });
         query.where('last_asked').lt(now);
 
-        query.exec(function (err, user) {
+        var success = function (err, user) {
+          tried++;
           if (user) {
             console.log('found a user...');
             user.last_asked = now;
@@ -98,10 +99,16 @@ module.exports = function (app) {
               subject: 'Your mentoring skills are required',
               text: body
             });
+          } else if (tried === 1) {
+            // couldn't find one, so we'll just grab the first
+            User.findOne({ tags: tag }, success);
           } else {
-            console.log('nah mate...');
+            // give up
+            next(new Error("Damnit, there isn't anyone in our DATABASE."));
           }
-        });
+        };
+
+        query.exec(success);
       }
     });
     res.render('asked');
