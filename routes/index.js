@@ -6,6 +6,11 @@ var User = require('../db/user'),
     fs = require('fs'),
     path = require('path'),
     emailDir = path.join(__dirname, '../views/'),
+    SendGrid = require('sendgrid').SendGrid,
+    sendgrid = new SendGrid(
+      process.env.SENDGRID_USERNAME,
+      process.env.SENDGRID_PASSWORD
+    ),
     replyTemplate,
     questionTemplate;
 
@@ -117,18 +122,16 @@ module.exports = function (app) {
             // send email to that person
             console.log('Sending question to ' + user.name);
 
-            mailer.sendMail({
+            sendgrid.send({
               from: "Tentoring's email dooberry <email-cat@tentoring.com>",
               to: user.name + ' <' + user.email + '>',
               subject: 'Your mentoring skills are required',
               text: body
             });
           } else if (tried === 1) {
-            console.log('trying again');
             // couldn't find one, so we'll just grab the first
             User.findOne({ 'tags': tag }).ne('email', req.session.user.email).exec(success);
           } else {
-            console.log('nope did not work');
             // give up
             // next(new Error("Damnit, there isn't anyone in our DATABASE."));
             res.render('error', {
@@ -204,7 +207,7 @@ module.exports = function (app) {
         // send email to that person
         console.log('Sending reply to ' + user.name + ' from ' + question.reply.by.name);
 
-        mailer.sendMail({
+        sendgrid.send({
           from: "Tentoring's email dooberry <email-cat@tentoring.com>",
           to: user.name + ' <' + user.email + '>',
           subject: 'Your question has been answered',

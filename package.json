@@ -15,6 +15,7 @@
     "hbs": "~2.1.0",
     "nodemailer": "~0.4.1",
     "marked": "~0.2.8",
-    "connect-mongo": "~0.3.2"
+    "connect-mongo": "~0.3.2",
+    "sendgrid": "~0.2.7"
   }
 }
