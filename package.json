@@ -14,6 +14,7 @@
     "mongoose-types": "~1.0.3",
     "hbs": "~2.1.0",
     "nodemailer": "~0.4.1",
-    "marked": "~0.2.8"
+    "marked": "~0.2.8",
+    "connect-mongo": "~0.3.2"
   }
 }
