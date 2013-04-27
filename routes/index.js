@@ -32,7 +32,7 @@ module.exports = function (app) {
     var post = {
       name: req.body.name,
       email: req.body.email,
-      tags: req.body.tags.split(' ').map(function (item) {
+      tags: req.body.tags.map(function (item) {
         return item.trim().replace(/,/, '');
       })
     };
