@@ -2,10 +2,15 @@ extends layout
 
 block content
   h1 Ask your question
-  form(method="post", action="/")
+  form(method="post", action="/ask")
     fieldset
       div.row.collapse
         div.large-12#ask
-          span.ask How do I
-          textarea.ask(autofocus=true, placeholder="...")
+          select(name="tag")
+            each tag in tags
+              option(value=tag)= tag
+      div.row.collapse
+        div.large-12#ask
+          p.ask How do I...?
+          textarea.ask(name="question", autofocus=true, placeholder="...")
           input(type="submit", value="Geronimo!")

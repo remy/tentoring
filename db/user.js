@@ -14,5 +14,10 @@ var UserSchema = new Schema({
   tags: [String]
 });
 
+UserSchema.pre('save', function (next) {
+  this.last_asked = this.created = new Date();
+  next();
+});
+
 mongoose.model('User', UserSchema);
 module.exports = mongoose.model('User');
