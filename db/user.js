@@ -6,7 +6,7 @@ var mongoose = require('mongoose'),
 mongooseTypes.loadTypes(mongoose);
 
 var UserSchema = new Schema({
-  email: mongoose.SchemaTypes.Email,
+  email: { type: mongoose.SchemaTypes.Email, unique: true },
   name: String,
   mentor: Boolean,
   last_asked: Date,
