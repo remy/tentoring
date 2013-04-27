@@ -29,6 +29,9 @@ module.exports = function (app) {
   });
 
   app.post('/', function (req, res) {
+    if (typeof req.body.tags === 'string') {
+      req.body.tags = [req.body.tags];
+    }
     var post = {
       name: req.body.name,
       email: req.body.email,
@@ -121,6 +124,7 @@ module.exports = function (app) {
   app.get('/reply/:token', function (req, res) {
     Question.findOne({ token: req.params.token }, function (err, question) {
       if (question) {
+        console.log(question);
         res.render('reply', question);
       } else {
         res.render('404', {
