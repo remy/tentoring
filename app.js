@@ -23,7 +23,7 @@ app.configure(function(){
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
 
-  app.set('title', '10 minute mentor');
+  app.set('title', 'Tiny Answers');
 });
 
 app.configure('development', function(){
