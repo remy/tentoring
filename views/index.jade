@@ -1,5 +1,25 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  h1= settings.title
+  p Welcome to #{settings.title}
+  form(method="post", action="/")
+    fieldset
+      div.row.collapse
+        div.small-3.large-2.columns
+          label.prefix(for="email") email
+        div.small-9.large-10.columns
+          input#email(name="email", type="email", required=true)
+      div.row.collapse
+        div.small-3.large-2.columns
+          label.radius.prefix(for="name") name
+        div.small-9.large-10.columns
+          input#name(name="name", type="text", required=true)
+      div.row.collapse
+        div.small-3.large-2.columns
+          label.prefix(for="tags") skills
+        div.small-9.large-10.columns
+          input#tags(name="tags", type="text", required=true)
+        
+
+        input.button(type="submit", value="Sign up")

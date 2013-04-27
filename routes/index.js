@@ -13,10 +13,17 @@ module.exports = function (app) {
     res.render('index');
   });
 
-  app.post('/home', function (req, res) {
-    var user = new User(req.body.user, function (err) {
+  app.get('/404', function (req, res) {
+    res.render('error', {
+      message: 'Creating your user kinda blew up. Sorry, look for the cat to make things better.',
+      title: 'It went wrong'
+    });
+  });
+
+  app.post('/', function (req, res) {
+    var user = new User(req.body.user, function (err, user) {
       console.log('user created', user);
-      if (err) {
+      if (err && !user) {
         res.render('error', {
           message: 'Creating your user kinda blew up. Sorry, look for the cat to make things better.'
         });

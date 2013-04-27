@@ -1,7 +1,14 @@
 doctype 5
 html
   head
-    title= title
-    link(rel='stylesheet', href='/css/style.css')
+    meta(charset="utf-8")
+    title= settings.title
+    meta(name="viewport", content="width=device-width")
+    link(rel='stylesheet', href='/css/normalize.css')
+    link(rel='stylesheet', href='/css/foundation.css')
+    link(rel='stylesheet', href='/css/app.css')
   body
     block content
+  script
+    document.write('<script src=' + ('__proto__' in {} ? 'js/vendor/zepto' : 'js/vendor/jquery') + '.js><\/script>')
+  script(src="js/foundation/foundation.js")

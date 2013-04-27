@@ -20,6 +20,8 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
+
+  app.set('title', '10 minute mentor');
 });
 
 app.configure('development', function(){
