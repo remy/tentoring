@@ -4,9 +4,10 @@ var express = require('express'),
     path = require('path'),
     hbs = require ('hbs'),
     mongoose = require('mongoose'),
-    db = mongoose.connection;
+    db = mongoose.connection,
+    mongourl = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/tinyanswers';
 
-mongoose.connect('mongodb://localhost/10minutementor');
+mongoose.connect(mongourl);
 
 var app = express();
 
@@ -26,9 +27,14 @@ app.configure(function(){
   app.set('title', 'Tiny Answers');
 });
 
-app.configure('development', function(){
+app.configure('development', function() {
   app.use(express.errorHandler());
+  app.set('url', 'http://localhost:' + app.get('port'));
   mongoose.set('debug', true);
+});
+
+app.configure('production', function () {
+  app.set('url', 'http://www.tinyanswers.com');
 });
 
 db.on('error', console.error.bind(console, 'connection error:'));
