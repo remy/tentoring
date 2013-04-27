@@ -140,6 +140,12 @@ module.exports = function (app) {
     });
   });
 
+  app.get('/reply_test', function (req, res) {
+    Question.findOne({}, function (err, question) {
+      res.render('reply', question);
+    });
+  });
+
   app.get('/reply/:token', function (req, res) {
     if (req.question) {
       res.render('reply', req.question);
@@ -152,7 +158,7 @@ module.exports = function (app) {
   });
 
   app.get('/reply/:token/timeout', function (req, res) {
-    
+
   });
 
   app.post('/reply/:token', function (req, res) {

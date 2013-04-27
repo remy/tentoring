@@ -1,12 +1,13 @@
 extends layout
 
 block content
-  h1 How do I #{text}
-  h2 Time left: 
+  h3
+    #{text}
+  h2 Time left:
     span#counter 10:00
   form#countdown(method="post", action="/reply")
     fieldset
-      div.row.collapse
-        div.large-12#ask
+      div.row
+        div.large-12.columns#ask_box
           textarea.reply(name="reply", autofocus=true, placeholder="...")
-          input(type="submit", value="Bosh.")
+          input.button.large.expand.success(type="submit", value="Send my reply")
