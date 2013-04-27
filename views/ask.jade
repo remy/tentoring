@@ -1,26 +1,21 @@
 extends layout
 
 block content
-  h1 Ask a tiny question
-  p We'll email this to one of our mentors and you'll hopefully get a quick answer.
-  ul
-    li Keep it short!
-    li Start with "How do I?"
-    li Give a bit of background, but not too much
-    li Ask about something specific
+  h1.lead Ask a mentor a question
+  p We'll email it to a mentor. You'll get ten minutes of their time.
+  p Make it clear. Keep it short. Give some context.
 
   form(method="post", action="/ask")
     fieldset
       div.row
-        div.large-6.columns
-          p
-            strong Who might help?
-        div.large-6.columns
+        div.large-12.columns
+          label(for="tag") This is a question about:
+      div.row
+        div.large-12.columns
           select(name="tag")
             each tag in tags
               option(value=tag)= tag
       div.row
-        div.large-12.columns#ask
-          p.ask How do I...?
-          textarea.ask(name="question", autofocus=true, placeholder="...")
-          input(type="submit", value="Geronimo!")
+        div.large-12.columns#ask_box
+          textarea.ask(name="question", autofocus=true, placeholder="How do I...")
+          input.button.expand.large.success(type="submit", value="Send my ten minute question")

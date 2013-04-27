@@ -24,7 +24,7 @@ app.configure(function(){
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
 
-  app.set('title', 'Tiny Answers');
+  app.set('title', 'Tentoring');
 });
 
 app.configure('development', function() {

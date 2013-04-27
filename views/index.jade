@@ -2,9 +2,15 @@ extends layout
 
 block content
   .big-header-thing
-    h1= settings.title
-    h3 Startup people giving each other ten minutes.
-    p Ask a quick question. We email one of our mentors. They get ten minutes to answer.
+    h1
+      span.ten Ten
+      span toring
+    h2.strapline Ten minute mentoring.
+
+    p
+      | Mentoring can take time. With Tentoring it only takes ten minutes.
+      | <br>
+      | Everyone is a mentor. Give and get advice in a ten minute window.
 
   form(method="post", action="/")
     div.row
@@ -23,7 +29,7 @@ block content
           div.small-3.large-2.columns
             label(for="tags") Skills
           div.small-9.large-10.columns
-            select.chosen(multiple="true",name="tags")
+            select.chosen(multiple="true",name="tags",data-placeholder="Select your skills")
               option(value="Funding") Funding
               option(value="Legal") Legal
               option(value="Technology") Technology
@@ -44,4 +50,4 @@ block content
             &nbsp;
           p
             :markdown
-              A hack by [Remy](http://twitter.com/rem), [Stef](http://twitter.com/stef) and friends at [Do Startup](http://dolectures.co.uk), 2013 in Wales.
+              A hack by [Remy](http://twitter.com/rem), [Stef](http://twitter.com/stef) and friends at [Do Startup](http://dolectures.co.uk), 2013.
