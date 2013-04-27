@@ -1,8 +1,7 @@
 extends layout
 
 block content
-  h3
-    #{text}
+  h1 Question: &ldquo;#{text}&rdquo;
   h2 Time left:
     span#counter 10:00
   form#countdown(method="post", action="/reply")

@@ -172,7 +172,7 @@ module.exports = function (app) {
   });
 
   app.get('/reply/:token/timeout', function (req, res) {
-
+    // this doesn't happen anymore - if it timesout, it's been sent!
   });
 
   app.post('/reply/:token', function (req, res) {
@@ -183,6 +183,7 @@ module.exports = function (app) {
         by: req.session.user._id,
         text: req.body.reply
       };
+      question.answered = true;
 
       question.save(function () {});
 
