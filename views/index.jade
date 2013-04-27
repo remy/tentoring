@@ -2,7 +2,8 @@ extends layout
 
 block content
   h1= settings.title
-  p Welcome to #{settings.title}
+  h3 Startup people sharing answers to questions, 10 minutes at a time.
+
   form(method="post", action="/")
     fieldset
       div.row.collapse
@@ -20,6 +21,6 @@ block content
           label.prefix(for="tags") skills
         div.small-9.large-10.columns
           input#tags(name="tags", type="text", required=true)
-        
+
 
         input.button(type="submit", value="Sign up")
