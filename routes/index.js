@@ -45,9 +45,9 @@ module.exports = function (app) {
   });
 
   app.post('/post', function (req, res) {
-    var tag = req.body.question.tag,
+    var tag = req.body.tag,
         now = Date.now();
-    var question = new Question(req.body.question, function (err, question) {
+    var question = new Question(req.body).save(function (err, question) {
       if (!err) {
         // find a mentor that matches the tag
         var query = User.findOne({ tags: tag });
@@ -73,7 +73,7 @@ module.exports = function (app) {
           }
         });
       }
-    }).save();
+    });
     res.render('ask');
   });
 

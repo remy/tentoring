@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1 Ask your question
+  form(method="post", action="/")
+    fieldset
+      div.row.collapse
+        div.large-12#ask
+          span.ask How do I
+          textarea.ask(autofocus=true, placeholder="...")
+          input(type="submit", value="Geronimo!")
