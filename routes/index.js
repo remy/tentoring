@@ -5,8 +5,17 @@ var User = require('../db/user'),
     hbs = require('hbs'),
     fs = require('fs'),
     path = require('path'),
-    source = fs.readFileSync(path.join(__dirname, '../views/email-question.txt'), 'utf8'),
-    emailTemplate = hbs.handlebars.compile(source);
+    emailDir = path.join(__dirname, '../views/'),
+    replyTemplate,
+    questionTemplate;
+
+fs.readFile(emailDir + '/email-question.txt', 'utf8', function (err, source) {
+  questionTemplate = hbs.handlebars.compile(source);
+});
+
+fs.readFile(emailDir + '/email-reply.txt', 'utf8', function (err, source) {
+  replyTemplate = hbs.handlebars.compile(source);
+});
 
 module.exports = function (app) {
   function auth(req, res, next) {
@@ -83,6 +92,7 @@ module.exports = function (app) {
         // find a mentor that matches the tag
         var query = User.findOne({ tags: tag });
         query.where('last_asked').lt(now);
+        query.ne('email', req.session.user.email);
 
         var success = function (err, user) {
           tried++;
@@ -91,7 +101,7 @@ module.exports = function (app) {
             user.last_asked = now;
             user.save();
 
-            var body = emailTemplate({
+            var body = questionTemplate({
               user: user,
               question: question,
               settings: app.settings
@@ -101,7 +111,7 @@ module.exports = function (app) {
             console.log('Sending question to ' + user.name);
 
             mailer.sendMail({
-              from: "Freybors <cat@domentoring>",
+              from: "Tentoring's email dooberry <email-cat@tentoring.com>",
               to: user.name + ' <' + user.email + '>',
               subject: 'Your mentoring skills are required',
               text: body
@@ -121,18 +131,76 @@ module.exports = function (app) {
     res.render('asked');
   });
 
-  app.get('/reply/:token', function (req, res) {
+  app.param('token', function (req, res, next) {
     Question.findOne({ token: req.params.token }, function (err, question) {
       if (question) {
-        console.log(question);
-        res.render('reply', question);
-      } else {
-        res.render('404', {
-          message: "Sorry, I couldn't find your question, but I found this cat instead",
-          title: 'It went wrong'
-        });
+        req.question = question;
       }
+      next();
     });
+  });
+
+  app.get('/reply/:token', function (req, res) {
+    if (req.question) {
+      res.render('reply', req.question);
+    } else {
+      res.render('404', {
+        message: "Sorry, I couldn't find your question, but I found this cat instead",
+        title: 'It went wrong'
+      });
+    }
+  });
+
+  app.get('/reply/:token/timeout', function (req, res) {
+    
+  });
+
+  app.post('/reply/:token', function (req, res) {
+    var question = req.question;
+    if (question) {
+      // save reply
+      question.reply = {
+        by: req.session.user._id,
+        text: req.body.reply
+      };
+
+      question.save(function () {});
+
+      // then send email to who it was made by
+      req.question.populate({
+        path: 'by'
+      }, function (err, question) {
+        var user = question.by;
+
+        var body = replyTemplate({
+          reply: {
+            by: {
+              name: req.session.user.name
+            },
+            text: req.body.reply
+          },
+          user: user,
+          question: question,
+          settings: app.settings
+        }, {});
+
+        // send email to that person
+        console.log('Sending reply to ' + user.name + ' from ' + question.reply.by.name);
+
+        mailer.sendMail({
+          from: "Tentoring's email dooberry <email-cat@tentoring.com>",
+          to: user.name + ' <' + user.email + '>',
+          subject: 'Your question has been answered',
+          text: body
+        });
+      });
+      res.render('thank-you');
+    } else {
+      res.render('404', {
+        message: "Sorry, I couldn't find your question, but I found this cat instead",
+        title: 'It went wrong'
+      });
+    }
   });
 
   app.post('/reply', function (req, res) {

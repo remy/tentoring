@@ -20,12 +20,12 @@
 }
 
 .main {
-  margin-top: 4em;
+  padding: 4em 0;
 }
 
 .main-body {
   border: 1px solid #d8d5d2;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.88);
 }
 
 .big-header-thing {
@@ -63,6 +63,7 @@ html {
   background-size: cover;
   background-repeat: no-repeat;
   height: 100%;
+  background-attachment: fixed;
 }
 
 body {

@@ -1,16 +1,11 @@
 extends layout
 
 block content
-  h1 Reply to the question
+  h1 How do I #{text}
   h2 Time left: 
     span#counter 10:00
   form#countdown(method="post", action="/reply")
     fieldset
-      div.row.collapse
-        div.large-12#reply
-          p 
-            em How do I 
-            strong= text
       div.row.collapse
         div.large-12#ask
           textarea.reply(name="reply", autofocus=true, placeholder="...")
