@@ -11,17 +11,17 @@ block content
       div.large-8.columns.large-offset-2
         div.row.collapse
           div.small-3.large-2.columns
-            label.prefix(for="email") Email
+            label(for="email") Email
           div.small-9.large-10.columns
             input#email(name="email", type="email", required=true)
         div.row.collapse
           div.small-3.large-2.columns
-            label.radius.prefix(for="name") Name
+            label(for="name") Name
           div.small-9.large-10.columns
             input#name(name="name", type="text", required=true)
         div.row.collapse
           div.small-3.large-2.columns
-            label.prefix(for="tags") Skills
+            label(for="tags") Skills
           div.small-9.large-10.columns
             select.chosen(multiple="true",name="tags")
               option(value="Funding") Funding
@@ -40,3 +40,8 @@ block content
             &nbsp;
           p
             input.button.large.success.expand(type="submit", value="Join in!")
+          p
+            &nbsp;
+          p
+            :markdown
+              A hack by [Remy](http://twitter.com/rem), [Stef](http://twitter.com/stef) and friends at [Do Startup](http://dolectures.co.uk), 2013 in Wales.

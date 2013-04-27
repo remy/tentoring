@@ -1,16 +1,26 @@
 extends layout
 
 block content
-  h1 Ask your question
+  h1 Ask a tiny question
+  p We'll email this to one of our mentors and you'll hopefully get a quick answer.
+  ul
+    li Keep it short!
+    li Start with "How do I?"
+    li Give a bit of background, but not too much
+    li Ask about something specific
+
   form(method="post", action="/ask")
     fieldset
-      div.row.collapse
-        div.large-12#ask
+      div.row
+        div.large-6.columns
+          p
+            strong Who might help?
+        div.large-6.columns
           select(name="tag")
             each tag in tags
               option(value=tag)= tag
-      div.row.collapse
-        div.large-12#ask
+      div.row
+        div.large-12.columns#ask
           p.ask How do I...?
           textarea.ask(name="question", autofocus=true, placeholder="...")
           input(type="submit", value="Geronimo!")

@@ -23,15 +23,33 @@
   background-color: white;
 }
 
-body, html {
-  background-color: #e8e5e2;
-}
-
 .big-header-thing {
   margin-bottom: 2em;
   text-align: center;
 }
 
+.big-header-thing h1 {
+  font-size: 480%;
+  color: #22d736;
+}
+
 .chzn-container .chzn-choices .search-field {
   padding: 7px !important;
 }
+
+html {
+  background-image:url(/im/us.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100%;
+}
+
+body {
+  background-color: transparent;
+  min-height: 100%;
+}
+
+label, p {
+  font-size: 1.2rem;
+}
+
