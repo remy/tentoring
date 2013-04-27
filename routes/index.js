@@ -21,8 +21,15 @@ module.exports = function (app) {
   });
 
   app.post('/', function (req, res) {
-    var user = new User(req.body.user, function (err, user) {
-      console.log('user created', user);
+    var post = {
+      name: req.body.name,
+      email: req.body.email,
+      tags: req.body.tags.split(' ').map(function (item) {
+        return item.trim().replace(/,/, '');
+      })
+    };
+
+    var user = new User(post).save(function (err, user) {
       if (err && !user) {
         res.render('error', {
           message: 'Creating your user kinda blew up. Sorry, look for the cat to make things better.'
@@ -66,7 +73,7 @@ module.exports = function (app) {
           }
         });
       }
-    });
+    }).save();
     res.render('ask');
   });
 
