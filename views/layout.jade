@@ -6,11 +6,13 @@ html
     meta(name="viewport", content="width=device-width")
     link(rel='stylesheet', href='/css/normalize.css')
     link(rel='stylesheet', href='/css/foundation.css')
-    link(rel='stylesheet', href='/css/style.css')
+    link(rel='stylesheet', href='/css/app.css')
   body
-    div.row.main-body
+    div.row.main
       div.large-8.large-centered.columns.small-12.columns
-        block content
+        .main-body.row
+          .large-12.columns
+            block content
   script
     document.write('<script src=' + ('__proto__' in {} ? 'js/vendor/zepto' : 'js/vendor/jquery') + '.js><\/script>')
   script(src="js/foundation/foundation.js")

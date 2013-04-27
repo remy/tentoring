@@ -9,3 +9,16 @@
   background: #fff;
   font-size: 88px;
 }
+
+.main {
+  margin-top: 4em;
+}
+
+.main-body {
+  border: 1px solid #d8d5d2;
+  background-color: white;
+}
+
+body, html {
+  background-color: #e8e5e2;
+}
