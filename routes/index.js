@@ -29,6 +29,9 @@ module.exports = function (app) {
   });
 
   app.post('/', function (req, res) {
+    if (typeof req.body.tags === 'string') {
+      req.body.tags = [req.body.tags];
+    }
     var post = {
       name: req.body.name,
       email: req.body.email,
@@ -39,24 +42,26 @@ module.exports = function (app) {
 
     var user = new User(post).save(function (err, user) {
       if (err && err.code !== 11000) {
-        console.log(err);
         res.render('error', {
           message: 'Creating your user kinda blew up. Sorry, look for the cat to make things better.'
         });
       } else if (!user) {
         User.findOne(post.email, function (err, user) {
           req.session.user = user;
-          res.redirect('/ask');
+          res.redirect('/next');
         });
       } else {
         req.session.user = user;
-        res.redirect('/ask');
+        res.redirect('/next');
       }
     });
   });
 
+  app.get('/next', function (req, res) {
+    res.render('signed-up');
+  });
+
   app.get('/ask', auth, function (req, res) {
-    console.log(req.session.user.tags)
     res.render('ask', {
       tags: req.session.user.tags
     });
@@ -88,11 +93,13 @@ module.exports = function (app) {
 
             var body = emailTemplate({
               user: user,
-              question: question
+              question: question,
+              settings: app.settings
             }, {});
 
             // send email to that person
             console.log('Sending question to ' + user.name);
+
             mailer.sendMail({
               from: "Freybors <cat@domentoring>",
               to: user.name + ' <' + user.email + '>',
@@ -114,11 +121,29 @@ module.exports = function (app) {
     res.render('asked');
   });
 
-  app.get('/reply', function (req, res) {
-    res.render('reply');
+  app.get('/reply/:token', function (req, res) {
+    Question.findOne({ token: req.params.token }, function (err, question) {
+      if (question) {
+        console.log(question);
+        res.render('reply', question);
+      } else {
+        res.render('404', {
+          message: "Sorry, I couldn't find your question, but I found this cat instead",
+          title: 'It went wrong'
+        });
+      }
+    });
   });
 
   app.post('/reply', function (req, res) {
     res.render('reply');
   });
+
+  // 404
+  app.get('/cat', function(req, res){
+    res.render('error', {
+      message: 'Whoa, nothing found, sorry. Cat?'
+    });
+  });
+
 };
