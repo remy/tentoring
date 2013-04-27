@@ -209,7 +209,7 @@ module.exports = function (app) {
 
   // 404
   app.get('/cat', function(req, res){
-    res.render('error', {
+    res.render('cat', {
       message: 'Whoa, nothing found, sorry. Cat?'
     });
   });

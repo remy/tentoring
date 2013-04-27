@@ -89,3 +89,11 @@ h1.lead {
 .lefted {
   text-align: left;
 }
+
+.trailer {
+  margin-bottom: 2em;
+}
+
+.middle, .centered {
+  text-align: center;
+}
