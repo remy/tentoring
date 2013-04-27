@@ -1,0 +1,11 @@
+#ask {
+  font-size: 88px;
+}
+
+#ask textarea,
+#ask textarea:active {
+  border: 0;
+  box-shadow: none;
+  background: #fff;
+  font-size: 88px;
+}
