@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1 Reply to the question
+  form(method="post", action="/reply")
+    fieldset
+      div.row.collapse
+        div.large-12#reply
+      div.row.collapse
+        div.large-12#ask
+          textarea.reply(name="reply", autofocus=true, placeholder="...")
+          input(type="submit", value="Bosh.")
