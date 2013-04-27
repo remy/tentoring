@@ -2,11 +2,15 @@
   font-size: 88px;
 }
 
+#ask p {
+  margin-bottom: 0;
+}
+
 #ask textarea,
 #ask textarea:active {
   border: 0;
-  box-shadow: none;
-  background: #fff;
+  /*box-shadow: none;*/
+  /*background: #fff;*/
   font-size: 88px;
 }
 
