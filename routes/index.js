@@ -27,7 +27,11 @@ module.exports = function (app) {
   }
 
   app.get('/', function (req, res) {
-    res.render('index');
+    if (req.session.user) {
+      res.render('index-loggedin');
+    } else {
+      res.render('index');
+    }
   });
 
   app.get('/404', function (req, res) {
@@ -90,13 +94,16 @@ module.exports = function (app) {
       var tried = 0;
       if (!err) {
         // find a mentor that matches the tag
-        var query = User.findOne({ tags: tag });
-        query.where('last_asked').lt(now);
-        query.ne('email', req.session.user.email);
+        var query = User
+          .findOne({ tags: tag })
+          .where('last_asked').lt(now)
+          .ne('email', req.session.user.email);
 
         var success = function (err, user) {
           tried++;
           if (user) {
+            res.render('asked');
+
             console.log('found a user...');
             user.last_asked = now;
             user.save();
@@ -117,18 +124,22 @@ module.exports = function (app) {
               text: body
             });
           } else if (tried === 1) {
+            console.log('trying again');
             // couldn't find one, so we'll just grab the first
-            User.findOne({ tags: tag }, success);
+            User.findOne({ 'tags': tag }).ne('email', req.session.user.email).exec(success);
           } else {
+            console.log('nope did not work');
             // give up
-            next(new Error("Damnit, there isn't anyone in our DATABASE."));
+            // next(new Error("Damnit, there isn't anyone in our DATABASE."));
+            res.render('error', {
+              message: 'Annoyingly there isn\'t anyone available for that skill just yet, but hold on tight, more mentors are coming!'
+            });
           }
         };
 
         query.exec(success);
       }
     });
-    res.render('asked');
   });
 
   app.param('token', function (req, res, next) {
