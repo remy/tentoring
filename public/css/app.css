@@ -35,12 +35,12 @@
 
 .big-header-thing h1 {
   font-size: 480%;
-  color: #22d736;
+  color: #27aae1;
   margin-top: 0.5em;
 }
 
 .big-header-thing h1 span.ten {
-  color: #3f783c;
+  color: #1c75bc;
 }
 
 .pie {
@@ -96,4 +96,13 @@ h1.lead {
 
 .middle, .centered {
   text-align: center;
+}
+
+.big-header-thing img {
+    margin-right: 12px;
+    top: 6px;
+    padding: 4px;
+    display:  inline-block;
+    position: relative;
+    vertical-align: baseline;
 }

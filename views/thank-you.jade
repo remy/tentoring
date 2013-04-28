@@ -1,2 +1,16 @@
-h1.lead Thank you, you are awesome.
-.trailer
+extends layout
+block content
+  h1.lead Amazing. The cat says thank you!
+  img.fail(src="http://thecatapi.com/api/images/get?format=src&type=jpg")
+  .middle.dropped
+    p You might want to follow up via email: #{by.email}
+    p Share this with your friends?
+    | <span class='st_sharethis_large' displayText='ShareThis'></span>
+    | <span class='st_facebook_large' displayText='Facebook'></span>
+    | <span class='st_twitter_large' displayText='Tweet'></span>
+    | <span class='st_googleplus_large' displayText='Google +'></span>
+    | <span class='st_email_large' displayText='Email'></span>
+    | <script type="text/javascript">var switchTo5x=true;</script>
+    | <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+    | <script type="text/javascript">stLight.options({st_url: "http://www.tentoring.com", publisher: "2fbb7b76-72b5-41cb-8bb3-3ea99213d4b2", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>
+  .trailer
