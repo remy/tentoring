@@ -22,6 +22,7 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(express.cookieParser('spa6kugo3chi4rti8wajy1no5ku'));
   app.use(express.session({
+    cookie: { maxAge: 365 * 24 * 60 * 60 * 1000 },
     store: new MongoStore({
       mongoose_connection: db
     }),
