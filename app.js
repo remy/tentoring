@@ -37,12 +37,12 @@ app.configure(function(){
 
 app.configure('development', function() {
   app.use(express.errorHandler());
-  app.set('url', 'http://localhost:' + app.get('port'));
+  app.set('url', 'http://tentoring.com');// 'http://localhost:' + app.get('port'));
   mongoose.set('debug', true);
 });
 
 app.configure('production', function () {
-  app.set('url', 'http://www.tinyanswers.com');
+  app.set('url', 'http://tentoring.com');
 });
 
 db.on('error', console.error.bind(console, 'connection error:'));
