@@ -245,4 +245,8 @@ module.exports = function (app) {
     });
   });
 
+  app.get('/please', function(req, res){
+    res.render('please');
+  });
+
 };
