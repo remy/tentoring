@@ -59,6 +59,7 @@ module.exports = function (app) {
 
     var user = new User(post).save(function (err, user) {
       if (err && err.code !== 11000) {
+        console.error(err);
         res.render('error', {
           message: 'Creating your user kinda blew up. Sorry, look for the cat to make things better.'
         });

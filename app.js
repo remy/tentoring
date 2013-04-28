@@ -6,7 +6,7 @@ var express = require('express'),
     mongoose = require('mongoose'),
     MongoStore = require('connect-mongo')(express),
     db = mongoose.connection,
-    mongourl = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/tinyanswers';
+    mongourl = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/tentoring';
 
 mongoose.connect(mongourl);
 
