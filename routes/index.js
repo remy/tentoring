@@ -24,7 +24,7 @@ fs.readFile(emailDir + '/email-reply.txt', 'utf8', function (err, source) {
 module.exports = function (app) {
   function auth(req, res, next) {
     if (!req.session || !req.session.user) {
-      res.redirect('/404');
+      res.render('login-please');
     } else {
       next();
     }
@@ -164,13 +164,7 @@ module.exports = function (app) {
     });
   });
 
-  app.get('/reply_test', function (req, res) {
-    Question.findOne({}, function (err, question) {
-      res.render('reply', question);
-    });
-  });
-
-  app.get('/reply/:token', function (req, res) {
+  app.get('/reply/:token', auth, function (req, res) {
     if (req.question) {
       req.question.text_md = marked(req.question.text);
       res.render('reply', req.question);
@@ -186,7 +180,7 @@ module.exports = function (app) {
     // this doesn't happen anymore - if it timesout, it's been sent!
   });
 
-  app.post('/reply/:token', function (req, res) {
+  app.post('/reply/:token', auth, function (req, res) {
     var question = req.question;
     if (question) {
       // save reply
