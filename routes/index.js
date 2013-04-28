@@ -6,6 +6,11 @@ var User = require('../db/user'),
     fs = require('fs'),
     path = require('path'),
     emailDir = path.join(__dirname, '../views/'),
+    SendGrid = require('sendgrid').SendGrid,
+    sendgrid = new SendGrid(
+      process.env.SENDGRID_USERNAME,
+      process.env.SENDGRID_PASSWORD
+    ),
     replyTemplate,
     questionTemplate;
 
@@ -27,7 +32,11 @@ module.exports = function (app) {
   }
 
   app.get('/', function (req, res) {
-    res.render('index');
+    if (req.session.user) {
+      res.render('index-loggedin');
+    } else {
+      res.render('index');
+    }
   });
 
   app.get('/404', function (req, res) {
@@ -90,13 +99,16 @@ module.exports = function (app) {
       var tried = 0;
       if (!err) {
         // find a mentor that matches the tag
-        var query = User.findOne({ tags: tag });
-        query.where('last_asked').lt(now);
-        query.ne('email', req.session.user.email);
+        var query = User
+          .findOne({ tags: tag })
+          .where('last_asked').lt(now)
+          .ne('email', req.session.user.email);
 
         var success = function (err, user) {
           tried++;
           if (user) {
+            res.render('asked');
+
             console.log('found a user...');
             user.last_asked = now;
             user.save();
@@ -110,7 +122,7 @@ module.exports = function (app) {
             // send email to that person
             console.log('Sending question to ' + user.name);
 
-            mailer.sendMail({
+            sendgrid.send({
               from: "Tentoring's email dooberry <email-cat@tentoring.com>",
               to: user.name + ' <' + user.email + '>',
               subject: 'Your mentoring skills are required',
@@ -118,17 +130,19 @@ module.exports = function (app) {
             });
           } else if (tried === 1) {
             // couldn't find one, so we'll just grab the first
-            User.findOne({ tags: tag }, success);
+            User.findOne({ 'tags': tag }).ne('email', req.session.user.email).exec(success);
           } else {
             // give up
-            next(new Error("Damnit, there isn't anyone in our DATABASE."));
+            // next(new Error("Damnit, there isn't anyone in our DATABASE."));
+            res.render('error', {
+              message: 'Annoyingly there isn\'t anyone available for that skill just yet, but hold on tight, more mentors are coming!'
+            });
           }
         };
 
         query.exec(success);
       }
     });
-    res.render('asked');
   });
 
   app.param('token', function (req, res, next) {
@@ -158,7 +172,7 @@ module.exports = function (app) {
   });
 
   app.get('/reply/:token/timeout', function (req, res) {
-
+    // this doesn't happen anymore - if it timesout, it's been sent!
   });
 
   app.post('/reply/:token', function (req, res) {
@@ -169,6 +183,7 @@ module.exports = function (app) {
         by: req.session.user._id,
         text: req.body.reply
       };
+      question.answered = true;
 
       question.save(function () {});
 
@@ -193,7 +208,7 @@ module.exports = function (app) {
         // send email to that person
         console.log('Sending reply to ' + user.name + ' from ' + question.reply.by.name);
 
-        mailer.sendMail({
+        sendgrid.send({
           from: "Tentoring's email dooberry <email-cat@tentoring.com>",
           to: user.name + ' <' + user.email + '>',
           subject: 'Your question has been answered',

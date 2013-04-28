@@ -12,6 +12,7 @@ var QuestionSchema = new Schema({
     ref:  'User'
   },
   tag: String,
+  answered: { type: Boolean, default: false },
   reply: {
     by: {
       type: ObjectId,

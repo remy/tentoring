@@ -1,11 +1,10 @@
 extends layout
 
 block content
-  h3
-    #{text}
+  h1 Question: &ldquo;#{text}&rdquo;
   h2 Time left:
     span#counter 10:00
-  form#countdown(method="post", action="/reply")
+  form#countdown(method="post")
     fieldset
       div.row
         div.large-12.columns#ask_box

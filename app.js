@@ -4,6 +4,7 @@ var express = require('express'),
     path = require('path'),
     hbs = require ('hbs'),
     mongoose = require('mongoose'),
+    MongoStore = require('connect-mongo')(express),
     db = mongoose.connection,
     mongourl = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/tinyanswers';
 
@@ -20,7 +21,12 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser('spa6kugo3chi4rti8wajy1no5ku'));
-  app.use(express.session({ secret: 'spa6kugo3chi4rti8wajy1no5ku' }));
+  app.use(express.session({
+    store: new MongoStore({
+      mongoose_connection: db
+    }),
+    secret: 'spa6kugo3chi4rti8wajy1no5ku'
+  }));
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
 
