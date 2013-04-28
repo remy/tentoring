@@ -31,6 +31,8 @@ app.configure(function(){
   app.use(express.static(path.join(__dirname, 'public')));
 
   app.set('title', 'Tentoring');
+
+  app.set('tags', ['Funding', 'Legal', 'Technology', 'Design', 'Marketing', 'Product', 'Social', 'Government', 'Introductions', 'Strategy', 'Cats']);
 });
 
 app.configure('development', function() {

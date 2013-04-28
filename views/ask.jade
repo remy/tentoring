@@ -13,7 +13,7 @@ block content
       div.row
         div.large-12.columns
           select(name="tag")
-            each tag in tags
+            each tag in settings.tags
               option(value=tag)= tag
       div.row
         div.large-12.columns#ask_box
