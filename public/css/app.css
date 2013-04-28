@@ -23,6 +23,12 @@
   padding: 4em 0;
 }
 
+@media only screen and (max-width: 48em) {
+  .main {
+    padding: 0;
+  }
+}
+
 .main-body {
   border: 1px solid #d8d5d2;
   background-color: rgba(255, 255, 255, 0.88);
