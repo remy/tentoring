@@ -1,7 +1,5 @@
 var User = require('../db/user'),
     Question = require('../db/question'),
-    nodemailer = require('nodemailer'),
-    mailer = nodemailer.createTransport('sendmail'),
     hbs = require('hbs'),
     fs = require('fs'),
     path = require('path'),
@@ -11,6 +9,7 @@ var User = require('../db/user'),
       process.env.SENDGRID_USERNAME,
       process.env.SENDGRID_PASSWORD
     ),
+    marked = require('marked'),
     replyTemplate,
     questionTemplate;
 
@@ -123,10 +122,14 @@ module.exports = function (app) {
             console.log('Sending question to ' + user.name);
 
             sendgrid.send({
-              from: "Tentoring's email dooberry <email-cat@tentoring.com>",
-              to: user.name + ' <' + user.email + '>',
+              from: "email-cat@tentoring.com",
+              to: user.email,
               subject: 'Your mentoring skills are required',
               text: body
+            }, function (err, message) {
+              if (err) {
+                console.error(message);
+              }
             });
           } else if (tried === 1) {
             // couldn't find one, so we'll just grab the first
@@ -148,9 +151,15 @@ module.exports = function (app) {
   app.param('token', function (req, res, next) {
     Question.findOne({ token: req.params.token }, function (err, question) {
       if (question) {
-        req.question = question;
+        question.populate({
+          path: 'by'
+        }, function (err, question) {
+          req.question = question;
+          next();
+        });
+      } else {
+        next();
       }
-      next();
     });
   });
 
@@ -162,6 +171,7 @@ module.exports = function (app) {
 
   app.get('/reply/:token', function (req, res) {
     if (req.question) {
+      req.question.text_md = marked(req.question.text);
       res.render('reply', req.question);
     } else {
       res.render('404', {
@@ -185,7 +195,7 @@ module.exports = function (app) {
       };
       question.answered = true;
 
-      question.save(function () {});
+      question.save();
 
       // then send email to who it was made by
       req.question.populate({
@@ -209,10 +219,14 @@ module.exports = function (app) {
         console.log('Sending reply to ' + user.name + ' from ' + question.reply.by.name);
 
         sendgrid.send({
-          from: "Tentoring's email dooberry <email-cat@tentoring.com>",
-          to: user.name + ' <' + user.email + '>',
+          from: "email-cat@tentoring.com",
+          to: user.email,
           subject: 'Your question has been answered',
           text: body
+        }, function (err, message) {
+          if (err) {
+            console.error(message);
+          }
         });
       });
       res.render('thank-you');

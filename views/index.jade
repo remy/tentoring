@@ -31,17 +31,8 @@ block content
             label(for="tags") Skills
           div.small-9.large-10.columns
             select.chosen(multiple="true",name="tags",data-placeholder="Select your skills")
-              option(value="Funding") Funding
-              option(value="Legal") Legal
-              option(value="Technology") Technology
-              option(value="Design") Design
-              option(value="Marketing") Marketing
-              option(value="Product") Product
-              option(value="Social") Social
-              option(value="Government") Government
-              option(value="Introductions") Introductions
-              option(value="Strategy") Strategy
-              option(value="Cats") Cats
+              each tag in settings.tags
+                option(value=tag)= tag
         div.row.collapse
           p
             &nbsp;
@@ -51,4 +42,4 @@ block content
             &nbsp;
           p
             :markdown
-              A hack by [Remy](http://twitter.com/rem), [Stef](http://twitter.com/stef) & friends at [Do Startup](http://dolectures.co.uk).
+              A hack by [Remy](http://twitter.com/rem), [Stef](http://twitter.com/stef) & friends at [Do&nbsp;Startup](http://dolectures.co.uk).

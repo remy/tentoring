@@ -6,6 +6,12 @@ function strpad(s,w,c){
   return (0<w?Array(w+1).join(c||0):"") + s;
 }
 
+document.documentElement.onkeydown = function (event) {
+  if (event.which === 27) {
+    target = +new Date();
+  }
+};
+
 var target = (+new Date()) + (10 * 1000 * 60),
     countdown = document.getElementById('countdown'),
     counter = document.getElementById('counter');
@@ -21,7 +27,9 @@ var timer = setInterval(function () {
   } else {
     // redirect
     clearInterval(timer);
-    countdown.submit();
+
+    counter.innerHTML = 'NONE!!!';
+    document.body.className = 'timeout';
   }
 }, 1000);
 
