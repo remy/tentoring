@@ -33,7 +33,7 @@ app.configure(function(){
 
   app.set('title', 'Tentoring');
 
-  app.set('tags', ['Funding', 'Legal', 'Technology', 'Design', 'Marketing', 'Product', 'Social', 'Government', 'Introductions', 'Strategy', 'Cats']);
+  app.set('tags', ['Funding', 'Legal', 'Technology', 'Design', 'Marketing', 'Product', 'Social', 'Government', 'Introductions', 'Strategy', 'Media', 'Cats']);
 });
 
 app.configure('development', function() {
