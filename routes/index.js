@@ -237,7 +237,7 @@ module.exports = function (app) {
           }
         });
       });
-      res.render('thank-you');
+      res.render('thank-you', question);
     } else {
       res.render('404', {
         message: "Sorry, I couldn't find your question, but I found this cat instead",
