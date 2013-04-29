@@ -182,7 +182,7 @@ module.exports = function (app) {
       req.question.text_md = marked(req.question.text);
       res.render('reply', req.question);
     } else {
-      res.render('404', {
+      res.render('error', {
         message: "Sorry, I couldn't find your question, but I found this cat instead",
         title: 'It went wrong'
       });
@@ -239,7 +239,7 @@ module.exports = function (app) {
       });
       res.render('thank-you', question);
     } else {
-      res.render('404', {
+      res.render('error', {
         message: "Sorry, I couldn't find your question, but I found this cat instead",
         title: 'It went wrong'
       });
