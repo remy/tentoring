@@ -46,6 +46,10 @@ module.exports = function (app) {
   });
 
   app.post('/', function (req, res) {
+    if (!req.body.tags) {
+      // TODO make this field required and report back
+      req.body.tags = [];
+    }
     if (typeof req.body.tags === 'string') {
       req.body.tags = [req.body.tags];
     }
