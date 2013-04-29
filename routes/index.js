@@ -24,6 +24,7 @@ fs.readFile(emailDir + '/email-reply.txt', 'utf8', function (err, source) {
 module.exports = function (app) {
   function auth(req, res, next) {
     if (!req.session || !req.session.user) {
+      req.session.afterLogin = req.url;
       res.render('login-please');
     } else {
       next();
@@ -34,8 +35,16 @@ module.exports = function (app) {
     if (req.session.user) {
       res.render('index-loggedin');
     } else {
-      res.render('index');
+      res.render('index', {
+        login: false
+      });
     }
+  });
+
+  app.get('/signin', function (req, res) {
+    res.render('index', {
+      login: true
+    });
   });
 
   app.get('/404', function (req, res) {
@@ -67,10 +76,10 @@ module.exports = function (app) {
         res.render('error', {
           message: 'Creating your user kinda blew up. Sorry, look for the cat to make things better.'
         });
-      } else if (!user) {
+      } else if (!user && err.code === 11000) {
         User.findOne(post.email, function (err, user) {
           req.session.user = user;
-          res.redirect('/next');
+          res.redirect(req.session.afterLogin);
         });
       } else {
         req.session.user = user;

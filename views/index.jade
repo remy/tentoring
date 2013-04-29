@@ -21,23 +21,28 @@ block content
             label(for="email") Email
           div.small-9.large-10.columns
             input#email(name="email", type="email", required=true)
-        div.row.collapse
-          div.small-3.large-2.columns
-            label(for="name") Name
-          div.small-9.large-10.columns
-            input#name(name="name", type="text", required=true)
-        div.row.collapse
-          div.small-3.large-2.columns
-            label(for="tags") Skills
-          div.small-9.large-10.columns
-            select.chosen(multiple="true",name="tags",data-placeholder="Select your skills")
-              each tag in settings.tags
-                option(value=tag)= tag
+        if !login
+          div.row.collapse
+            div.small-3.large-2.columns
+              label(for="name") Name
+            div.small-9.large-10.columns
+              input#name(name="name", type="text", required=true)
+          div.row.collapse
+            div.small-3.large-2.columns
+              label(for="tags") Skills
+            div.small-9.large-10.columns
+              select.chosen(multiple="true",name="tags",data-placeholder="Select your skills")
+                each tag in settings.tags
+                  option(value=tag)= tag
         div.row.collapse
           p
             &nbsp;
-          p
-            input.button.large.expand(type="submit", value="Join in!")
+          if login
+            p
+              input.button.large.expand(type="submit", value="Sign in")
+          else
+            p
+              input.button.large.expand(type="submit", value="Join in!")
           p
             &nbsp;
           p
