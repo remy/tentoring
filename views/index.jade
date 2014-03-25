@@ -14,37 +14,34 @@ block content
         p Use Tentoring to give and get advice in the time it takes to make a cup of tea.
 
   form(method="post", action="/")
-    div.row
-      div.large-8.columns.large-offset-2
-        div.row.collapse
-          div.small-3.large-2.columns
-            label(for="email") Email
-          div.small-9.large-10.columns
+    .row
+      .large-8.columns.large-offset-2
+        .row.collapse
+          .small-3.large-2.columns
+            label.right(for="email") Email
+          .small-9.large-10.columns
             input#email(name="email", type="email", required=true)
         if !login
-          div.row.collapse
-            div.small-3.large-2.columns
-              label(for="name") Name
-            div.small-9.large-10.columns
+          .row.collapse
+            .small-3.large-2.columns
+              label.right(for="name") Name
+            .small-9.large-10.columns
               input#name(name="name", type="text", required=true)
-          div.row.collapse
-            div.small-3.large-2.columns
-              label(for="tags") Skills
-            div.small-9.large-10.columns
-              select.chosen(multiple="true",name="tags",data-placeholder="Select your skills")
-                each tag in settings.tags
-                  option(value=tag)= tag
-        div.row.collapse
-          p
-            &nbsp;
+          .row.collapse
+            .small-3.large-2.columns
+              label.right(for="skills") Skills
+            .small-9.large-10.columns
+              select.chosen(multiple="true",name="skills",data-placeholder="Select your skills")
+                each skill in skills
+                  option(value=skill)= skill
+        .row.collapse
+          p &nbsp;
           if login
             p
               input.button.large.expand(type="submit", value="Sign in")
           else
             p
               input.button.large.expand(type="submit", value="Join in!")
-          p
-            &nbsp;
-          p
-            :markdown
-              A hack by [Remy](http://twitter.com/rem), [Stef](http://twitter.com/stef) & friends at [Do&nbsp;Startup](http://dolectures.co.uk).
+          p &nbsp;
+          :markdown
+            A hack by [Remy](http://twitter.com/rem), [Stef](http://twitter.com/stef) & friends at [Do&nbsp;Startup](http://dolectures.co.uk).

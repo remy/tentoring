@@ -1,17 +1,19 @@
-var User = require('../db/user'),
-    Question = require('../db/question'),
-    hbs = require('hbs'),
-    fs = require('fs'),
-    path = require('path'),
-    emailDir = path.join(__dirname, '../views/'),
-    SendGrid = require('sendgrid').SendGrid,
-    sendgrid = new SendGrid(
-      process.env.SENDGRID_USERNAME,
-      process.env.SENDGRID_PASSWORD
-    ),
-    marked = require('marked'),
-    replyTemplate,
-    questionTemplate;
+'use strict';
+var User = require('../db/user');
+var Question = require('../db/question');
+var hbs = require('hbs');
+var fs = require('fs');
+var path = require('path');
+var emailDir = path.join(__dirname, '../views/');
+var SendGrid = require('sendgrid').SendGrid;
+var sendgrid = new SendGrid(
+     process.env.SENDGRID_USERNAME,
+     process.env.SENDGRID_PASSWORD
+);
+var marked = require('marked');
+var _ = require('lodash');
+var replyTemplate;
+var questionTemplate;
 
 fs.readFile(emailDir + '/email-question.txt', 'utf8', function (err, source) {
   questionTemplate = hbs.handlebars.compile(source);
@@ -31,55 +33,78 @@ module.exports = function (app) {
     }
   }
 
+  function render(req, res, view, data) {
+    var d = _.extend({}, req.org.config, data || {});
+    res.render(view, d);
+  }
+
   app.get('/', function (req, res) {
     if (req.session.user) {
-      res.render('index-loggedin');
+      render(req, res, 'index-loggedin');
     } else {
-      res.render('index', {
-        login: false
+      render(req, res, 'index', {
+        login: false,
+        skills: req.org.config.skills // TODO normalise
       });
     }
   });
 
   app.get('/signin', function (req, res) {
-    res.render('index', {
+    render(req, res, 'index', {
       login: true
     });
   });
 
   app.get('/404', function (req, res) {
-    res.render('error', {
+    render(req, res, 'error', {
       message: 'Creating your user kinda blew up. Sorry, look for the cat to make things better.',
       title: 'It went wrong'
     });
   });
 
   app.post('/', function (req, res) {
-    if (!req.body.tags) {
+    if (!req.body.skills) {
       // TODO make this field required and report back
-      req.body.tags = [];
+      req.body.skills = [];
     }
-    if (typeof req.body.tags === 'string') {
-      req.body.tags = [req.body.tags];
+
+    if (typeof req.body.skills === 'string') {
+      req.body.skills = [req.body.skills];
     }
+
+    var skills = req.body.skills.map(function (item) {
+      return item.trim().replace(/,/, '');
+    });
+
     var post = {
       name: req.body.name,
       email: req.body.email,
-      tags: req.body.tags.map(function (item) {
-        return item.trim().replace(/,/, '');
-      })
+      orgs: [{
+        org: req.org,
+        skills: skills
+      }]
     };
 
-    var user = new User(post).save(function (err, user) {
+    new User(post).save(function (err, user) {
       if (err && err.code !== 11000) {
         console.error(err);
-        res.render('error', {
+        render(req, res, 'error', {
           message: 'Creating your user kinda blew up. Sorry, look for the cat to make things better.'
         });
       } else if (!user && err.code === 11000) {
         User.findOne(post.email, function (err, user) {
+          // TODO decide whether to update the user's skills
+          // also check whether the user actually is in this org, and if not
+          // add them in
+
+          user.orgs.forEach(function (data) {
+            console.log('org:', data.org, req.org._id, req.org);
+            if (data.org.toString() === req.org._id) {
+              console.log('already in org');
+            }
+          });
           req.session.user = user;
-          res.redirect(req.session.afterLogin);
+          res.redirect(req.session.afterLogin || '/next');
         });
       } else {
         req.session.user = user;
@@ -89,40 +114,41 @@ module.exports = function (app) {
   });
 
   app.get('/next', function (req, res) {
-    res.render('signed-up');
+    render(req, res, 'signed-up');
   });
 
   app.get('/ask', auth, function (req, res) {
-    res.render('ask', {
-      tags: req.session.user.tags
+    render(req, res, 'ask', {
+      skills: req.org.config.skills
     });
   });
 
-  app.post('/ask', function (req, res, next) {
-    var tag = req.body.tag,
+  app.post('/ask', function (req, res) {
+    var skill = req.body.skill,
         now = Date.now();
 
     var body = {
       text: req.body.question,
       by: req.session.user._id,
-      tag: tag
+      skill: skill
     };
 
-    var question = new Question(body).save(function (err, question) {
+    new Question(body).save(function (err, question) {
       var tried = 0;
       if (!err) {
-        // find a mentor that matches the tag
+        // find a mentor that matches the skill
         var query = User
-          .findOne({ tags: tag })
+          .findOne({ skills: skill })
           .where('last_asked').lt(now)
           .ne('email', req.session.user.email);
 
         var success = function (err, user) {
           tried++;
           if (user) {
-            res.render('asked');
+            render(req, res, 'asked');
 
             console.log('found a user...');
+            // TODO filter by org
             user.last_asked = now;
             user.save();
 
@@ -136,7 +162,7 @@ module.exports = function (app) {
             console.log('Sending question to ' + user.name);
 
             sendgrid.send({
-              from: "email-cat@tentoring.com",
+              from: 'email-cat@tentoring.com',
               to: user.email,
               subject: 'Your mentoring skills are required',
               text: body
@@ -147,11 +173,12 @@ module.exports = function (app) {
             });
           } else if (tried === 1) {
             // couldn't find one, so we'll just grab the first
-            User.findOne({ 'tags': tag }).ne('email', req.session.user.email).exec(success);
+            // TODO filter by organisation
+            User.findOne({ 'skills': skill }).ne('email', req.session.user.email).exec(success);
           } else {
             // give up
             // next(new Error("Damnit, there isn't anyone in our DATABASE."));
-            res.render('error', {
+            render(req, res, 'error', {
               message: 'Annoyingly there isn\'t anyone available for that skill just yet, but hold on tight, more mentors are coming!'
             });
           }
@@ -179,18 +206,15 @@ module.exports = function (app) {
 
   app.get('/reply/:token', auth, function (req, res) {
     if (req.question) {
+      // TODO use a markdown helper in handlebars instead of doing here
       req.question.text_md = marked(req.question.text);
-      res.render('reply', req.question);
+      render(req, res, 'reply', req.question);
     } else {
-      res.render('error', {
-        message: "Sorry, I couldn't find your question, but I found this cat instead",
+      render(req, res, 'error', {
+        message: 'Sorry, I couldn\'t find your question, but I found this cat instead',
         title: 'It went wrong'
       });
     }
-  });
-
-  app.get('/reply/:token/timeout', function (req, res) {
-    // this doesn't happen anymore - if it timesout, it's been sent!
   });
 
   app.post('/reply/:token', auth, function (req, res) {
@@ -227,7 +251,7 @@ module.exports = function (app) {
         console.log('Sending reply to ' + user.name + ' from ' + question.reply.by.name);
 
         sendgrid.send({
-          from: "email-cat@tentoring.com",
+          from: 'email-cat@tentoring.com',
           to: user.email,
           subject: 'Your question has been answered',
           text: body
@@ -237,10 +261,10 @@ module.exports = function (app) {
           }
         });
       });
-      res.render('thank-you', question);
+      render(req, res, 'thank-you', question);
     } else {
-      res.render('error', {
-        message: "Sorry, I couldn't find your question, but I found this cat instead",
+      render(req, res, 'error', {
+        message: 'Sorry, I couldn\'t find your question, but I found this cat instead',
         title: 'It went wrong'
       });
     }
@@ -251,24 +275,24 @@ module.exports = function (app) {
       question.populate({
         path: 'by'
       }, function (err, question) {
-        res.render('thank-you', question);
+        render(req, res, 'thank-you', question);
       });
     });
   });
 
   app.post('/reply', function (req, res) {
-    res.render('reply');
+    render(req, res, 'reply');
   });
 
   // 404
   app.get('/cat', function(req, res){
-    res.render('cat', {
+    render(req, res, 'cat', {
       message: 'Whoa, nothing found, sorry. Cat?'
     });
   });
 
   app.get('/please', function(req, res){
-    res.render('please');
+    render(req, res, 'please');
   });
 
 };
