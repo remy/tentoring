@@ -9,7 +9,6 @@ var schema = new Schema({
   created: { type: Date, default: Date.now },
   orgs: [{
     org: {
-      required: true,
       type: ObjectId,
       ref: 'Org'
     },
@@ -17,6 +16,10 @@ var schema = new Schema({
     asked: { type: Date, default: Date.now },
     mentor: { type: Boolean, default: false }
   }]
+});
+
+schema.static('findByOrg', function (id, callback) {
+  return this.find({ orgs: { orgs: id } }, callback);
 });
 
 mongoose.model('User', schema);

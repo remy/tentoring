@@ -1,3 +1,4 @@
+'use strict';
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
@@ -24,6 +25,14 @@ var schema = new Schema({
     }
   },
   events: [{ type: ObjectId, ref: 'Event' }],
+});
+
+schema.pre('save', function (next) {
+  this.config.skills = this.config.skills.sort(function (a, b) {
+    return a.toLowerCase() < b.toLowerCase() ? -1 : 1;
+  });
+
+  next();
 });
 
 mongoose.model('Org', schema);

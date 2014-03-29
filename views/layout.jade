@@ -10,6 +10,10 @@ html
     link(rel='stylesheet', href='/css/app.css')
     link(rel="shortcut icon", href="/im/pie-57.png")
     link(rel="apple-touch-icon-precomposed", sizes="57x57", href="/im/pie-57.png")
+
+    if css
+      style!= css
+
     block header
   body
     div.row.main
@@ -19,7 +23,7 @@ html
             block content
   script(src="/js/foundation/jquery.js")
   script(src="/js/foundation/foundation.js")
-  script(src="/js/chosen.jquery.min.js")
+  //- script(src="/js/chosen.jquery.min.js")
   script(src="/js/app.js")
   script(src="//use.typekit.net/ypb3jtq.js")
   script.

@@ -87,7 +87,6 @@ module.exports = function (app) {
 
     new User(post).save(function (err, user) {
       if (err && err.code !== 11000) {
-        console.error(err);
         render(req, res, 'error', {
           message: 'Creating your user kinda blew up. Sorry, look for the cat to make things better.'
         });
@@ -97,12 +96,16 @@ module.exports = function (app) {
           // also check whether the user actually is in this org, and if not
           // add them in
 
-          user.orgs.forEach(function (data) {
-            console.log('org:', data.org, req.org._id, req.org);
-            if (data.org.toString() === req.org._id) {
-              console.log('already in org');
-            }
+          var found = user.orgs.filter(function (data) {
+            return (data.org.toString() === req.org._id);
           });
+
+          if (found.length === 0) {
+            // FIXME this doesn't work...
+            user.orgs.push(post.orgs);
+            user.save();
+          }
+
           req.session.user = user;
           res.redirect(req.session.afterLogin || '/next');
         });
@@ -123,6 +126,18 @@ module.exports = function (app) {
     });
   });
 
+  app.get('/test/find-user', function (req, res) {
+    var query = User
+          .findOne({ 'orgs.skills': req.query.skill, 'orgs.org': req.org._id })
+          .where('orgs.asked').lt(Date.now())
+          .ne('email', req.query.email);
+
+    query.exec(function (err, doc) {
+      console.log(err, doc);
+      res.send({ doc: doc, date: new Date() });
+    });
+  });
+
   app.post('/ask', function (req, res) {
     var skill = req.body.skill,
         now = Date.now();
@@ -138,9 +153,9 @@ module.exports = function (app) {
       if (!err) {
         // find a mentor that matches the skill
         var query = User
-          .findOne({ skills: skill })
-          .where('last_asked').lt(now)
-          .ne('email', req.session.user.email);
+          .findOne({ 'orgs.skills': req.query.skill, 'orgs.org': req.org._id })
+          .where('orgs.asked').lt(Date.now())
+          .ne('email', req.query.email);
 
         var success = function (err, user) {
           tried++;
@@ -149,7 +164,7 @@ module.exports = function (app) {
 
             console.log('found a user...');
             // TODO filter by org
-            user.last_asked = now;
+            user.asked = now;
             user.save();
 
             var body = questionTemplate({
@@ -173,8 +188,7 @@ module.exports = function (app) {
             });
           } else if (tried === 1) {
             // couldn't find one, so we'll just grab the first
-            // TODO filter by organisation
-            User.findOne({ 'skills': skill }).ne('email', req.session.user.email).exec(success);
+            User.findOne({ 'orgs.skills': skill, 'orgs.org': req.org }).ne('email', req.session.user.email).exec(success);
           } else {
             // give up
             // next(new Error("Damnit, there isn't anyone in our DATABASE."));
