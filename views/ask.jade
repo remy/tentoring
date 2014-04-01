@@ -7,15 +7,15 @@ block content
 
   form(method="post", action="/ask")
     fieldset
-      div.row
-        div.large-12.columns
-          label(for="tag") This is a question about:
-      div.row
-        div.large-12.columns
-          select(name="tag")
-            each tag in settings.tags
-              option(value=tag)= tag
-      div.row
-        div.large-12.columns#ask_box
+      .row
+        .large-12.columns
+          label(for="skill") This is a question about:
+      .row
+        .large-12.columns
+          select(name="skill")
+            each skill in skills
+              option(value=skill)= skill
+      .row
+        .large-12.columns#ask_box
           textarea.ask(name="question", autofocus=true, placeholder="How do I...", required=true)
           input.button.expand.large.success(type="submit", value="Send my ten minute question")

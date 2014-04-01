@@ -1,20 +1,26 @@
-var mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
-    ObjectId = Schema.ObjectId;
+'use strict';
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+var ObjectId = Schema.ObjectId;
 
-var UserSchema = new Schema({
+var schema = new Schema({
   email: { type: String, unique: true },
   name: String,
-  mentor: Boolean,
-  last_asked: Date,
-  created: Date,
-  tags: [String]
+  created: { type: Date, default: Date.now },
+  orgs: [{
+    org: {
+      type: ObjectId,
+      ref: 'Org'
+    },
+    skills: [String],
+    asked: { type: Date, default: Date.now },
+    mentor: { type: Boolean, default: false }
+  }]
 });
 
-UserSchema.pre('save', function (next) {
-  this.last_asked = this.created = new Date();
-  next();
+schema.static('findByOrg', function (id, callback) {
+  return this.find({ orgs: { orgs: id } }, callback);
 });
 
-mongoose.model('User', UserSchema);
+mongoose.model('User', schema);
 module.exports = mongoose.model('User');

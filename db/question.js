@@ -1,15 +1,20 @@
+'use strict';
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     ObjectId = Schema.ObjectId,
     crypto = require('crypto');
 
-var QuestionSchema = new Schema({
+var schema = new Schema({
+  event: {
+    type: ObjectId,
+    ref: 'Event'
+  },
   created: Date,
   text: String,
   token: String,
   by: {
     type: ObjectId,
-    ref:  'User'
+    ref: 'User'
   },
   tag: String,
   answered: { type: Boolean, default: false },
@@ -22,7 +27,7 @@ var QuestionSchema = new Schema({
   }
 });
 
-QuestionSchema.pre('save', function (next) {
+schema.pre('save', function (next) {
   if (!this.token) {
     this.token = crypto.createHash('sha1').update(Date.now()+'').digest('hex').substr(0,6);
   }
@@ -31,5 +36,5 @@ QuestionSchema.pre('save', function (next) {
   next();
 });
 
-mongoose.model('Question', QuestionSchema);
+mongoose.model('Question', schema);
 module.exports = mongoose.model('Question');

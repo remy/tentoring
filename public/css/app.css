@@ -59,9 +59,9 @@
   background-position: bottom;
 }
 
-.chzn-container .chzn-choices .search-field {
+.chosen-choices .search-field {
   padding: 7px !important;
-  width: 100% !important;
+/*   width: 100% !important; */
 }
 
 html {
@@ -138,3 +138,9 @@ h1.lead {
   -webkit-animation-iteration-count: infinite;
   -webkit-animation-timing-function: linear;
 }
+
+label {
+  margin-right: 20px;
+  line-height: 1.8em;
+}
+
