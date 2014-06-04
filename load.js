@@ -11,10 +11,51 @@ var Event = require('./db/event');
 mongoose.connect(mongourl);
 
 db.once('open', function () {
-  load().then(function () {
+  create('hatchcamp', {
+    title: 'Ten Minute Mentoring for Hatchcamp',
+    css: 'html { background-image: url(\'/im/orgs/hatchcamp.jpg\') }',
+    skills: [
+      'Funding',
+      'Legal',
+      'Technology',
+      'Design',
+      'Marketing',
+      'Product',
+      // 'Social',
+      'Government',
+      'Introductions',
+      'Strategy',
+      'Media',
+
+      'Social impact',
+      'Social media',
+      'Scaling a business',
+      'Management',
+      'Events',
+
+      ]
+  }).then(function () {
     db.close();
   });
 });
+
+function create(slug, config) {
+  var defer = when.defer();
+
+  new Event({
+    slug: slug + '-1'
+  }).save(function (err, doc) {
+    new Org({
+      slug: slug,
+      config: config,
+      events: [doc]
+    }).save(function () {
+      defer.resolve();
+    });
+  });
+
+  return defer.promise;
+}
 
 function load() {
   var defer1 = when.defer();
