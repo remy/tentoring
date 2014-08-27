@@ -222,7 +222,7 @@ module.exports = function (app) {
     if (req.question) {
       // TODO use a markdown helper in handlebars instead of doing here
       req.question.text_md = marked(req.question.text);
-      render(req, res, 'reply', req.question);
+      render(req, res, 'reply', req.question.toObject());
     } else {
       render(req, res, 'error', {
         message: 'Sorry, I couldn\'t find your question, but I found this cat instead',
