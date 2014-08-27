@@ -14,6 +14,7 @@ var marked = require('marked');
 var _ = require('lodash');
 var replyTemplate;
 var questionTemplate;
+var mongoose = require('mongoose');
 
 fs.readFile(emailDir + '/email-question.txt', 'utf8', function (err, source) {
   questionTemplate = hbs.handlebars.compile(source);
@@ -34,6 +35,9 @@ module.exports = function (app) {
   }
 
   function render(req, res, view, data) {
+    if (data instanceof mongoose.Document) {
+      data = data.toObject();
+    }
     var d = _.extend({}, req.org.config, data || {});
     res.render(view, d);
   }
@@ -222,7 +226,7 @@ module.exports = function (app) {
     if (req.question) {
       // TODO use a markdown helper in handlebars instead of doing here
       req.question.text_md = marked(req.question.text);
-      render(req, res, 'reply', req.question);
+      render(req, res, 'reply', req.question.toObject());
     } else {
       render(req, res, 'error', {
         message: 'Sorry, I couldn\'t find your question, but I found this cat instead',
