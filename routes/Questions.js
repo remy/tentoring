@@ -7,6 +7,8 @@ var email = require('../lib/email');
 
 var questions = express.Router();
 
+// TODO make sure all these routes require auth
+
 questions.param('token', function (req, res, next) {
   Questions
     .findOne({ token: req.params.token })
