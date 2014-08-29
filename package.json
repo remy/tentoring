@@ -12,7 +12,7 @@
     "mongoose": "~3.6.8",
     "hbs": "~2.1.0",
     "marked": "~0.2.8",
-    "connect-mongo": "~0.3.2",
+    "connect-mongo": "~0.4.1",
     "sendgrid": "~0.2.7",
     "express-subdomain-handler": "~0.1.0",
     "express": "~4.8.6",
