@@ -32,19 +32,11 @@ module.exports = function (app) {
     }
   }
 
-  function render(req, res, view, data) {
-    if (data instanceof mongoose.Document) {
-      data = data.toObject();
-    }
-    var d = _.extend({}, req.org.config, data || {});
-    res.render(view, d);
-  }
-
   app.get('/', function (req, res) {
     if (req.session.user) {
-      render(req, res, 'index-loggedin');
+      res.render('index-loggedin');
     } else {
-      render(req, res, 'index', {
+      res.render('index', {
         login: false,
         skills: req.org.config.skills // TODO normalise
       });
@@ -52,13 +44,13 @@ module.exports = function (app) {
   });
 
   app.get('/signin', function (req, res) {
-    render(req, res, 'index', {
+    res.render('index', {
       login: true
     });
   });
 
   app.get('/404', function (req, res) {
-    render(req, res, 'error', {
+    res.render('error', {
       message: 'Creating your user kinda blew up. Sorry, look for the cat to make things better.',
       title: 'It went wrong'
     });
@@ -89,7 +81,7 @@ module.exports = function (app) {
 
     new User(post).save(function (err, user) {
       if (err && err.code !== 11000) {
-        render(req, res, 'error', {
+        res.render('error', {
           message: 'Creating your user kinda blew up. Sorry, look for the cat to make things better.'
         });
       } else if (!user && err.code === 11000) {
@@ -119,11 +111,11 @@ module.exports = function (app) {
   });
 
   app.get('/next', function (req, res) {
-    render(req, res, 'signed-up');
+    res.render('signed-up');
   });
 
   app.get('/ask', auth, function (req, res) {
-    render(req, res, 'ask', {
+    res.render('ask', {
       skills: req.org.config.skills
     });
   });
@@ -162,7 +154,7 @@ module.exports = function (app) {
         var success = function (err, user) {
           tried++;
           if (user) {
-            render(req, res, 'asked');
+            res.render('asked');
 
             console.log('found a user...');
             // TODO filter by org
@@ -194,7 +186,7 @@ module.exports = function (app) {
           } else {
             // give up
             // next(new Error("Damnit, there isn't anyone in our DATABASE."));
-            render(req, res, 'error', {
+            res.render('error', {
               message: 'Annoyingly there isn\'t anyone available for that skill just yet, but hold on tight, more mentors are coming!'
             });
           }
@@ -224,9 +216,9 @@ module.exports = function (app) {
     if (req.question) {
       // TODO use a markdown helper in handlebars instead of doing here
       req.question.text_md = marked(req.question.text);
-      render(req, res, 'reply', req.question.toObject());
+      res.render('reply', req.question.toObject());
     } else {
-      render(req, res, 'error', {
+      res.render('error', {
         message: 'Sorry, I couldn\'t find your question, but I found this cat instead',
         title: 'It went wrong'
       });
@@ -277,9 +269,9 @@ module.exports = function (app) {
           }
         });
       });
-      render(req, res, 'thank-you', question);
+      res.render('thank-you', question);
     } else {
-      render(req, res, 'error', {
+      res.render('error', {
         message: 'Sorry, I couldn\'t find your question, but I found this cat instead',
         title: 'It went wrong'
       });
@@ -291,24 +283,24 @@ module.exports = function (app) {
       question.populate({
         path: 'by'
       }, function (err, question) {
-        render(req, res, 'thank-you', question);
+        res.render('thank-you', question);
       });
     });
   });
 
   app.post('/reply', function (req, res) {
-    render(req, res, 'reply');
+    res.render('reply');
   });
 
   // 404
   app.get('/cat', function(req, res){
-    render(req, res, 'cat', {
+    res.render('cat', {
       message: 'Whoa, nothing found, sorry. Cat?'
     });
   });
 
   app.get('/please', function(req, res){
-    render(req, res, 'please');
+    res.render('please');
   });
 
 };
