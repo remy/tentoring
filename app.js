@@ -1,14 +1,20 @@
 'use strict';
-var express = require('express'),
-    routes = require('./routes'),
-    middleware = require('./lib/middleware'),
-    http = require('http'),
-    path = require('path'),
-    mongoose = require('mongoose'),
-    MongoStore = require('connect-mongo')(express),
-    db = mongoose.connection,
-    port = process.env.PORT || 8000,
-    mongourl = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/tentoring';
+var express = require('express');
+var errorHandler = require('errorhandler');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var routes = require('./routes');
+var middleware = require('./lib/middleware');
+var http = require('http');
+var path = require('path');
+var mongoose = require('mongoose');
+var MongoStore = require('connect-mongo')(session);
+var db = mongoose.connection;
+var port = process.env.PORT || 8000;
+var mongourl = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/tentoring';
 
 mongoose.connect(mongourl);
 
