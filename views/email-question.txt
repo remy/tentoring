@@ -1,7 +1,0 @@
-Hi {{user.name}},
-
-You've been asked for your mentoring.
-
-Use the link below and give your 10 minutes of 
-
-{{settings.url}}/reply/{{question.token}}
