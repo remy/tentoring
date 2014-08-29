@@ -11,7 +11,9 @@ var questions = express.Router();
 
 questions.param('token', function (req, res, next) {
   Questions
-    .findOne({ token: req.params.token })
+    .findOne({
+      token: req.params.token
+    })
     .populate('by')
     .exec(function (err, question) {
       // TODO: handle no question with 404
