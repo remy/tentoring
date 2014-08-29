@@ -4,7 +4,7 @@ var Question = require('../db/question');
 var hbs = require('hbs');
 var fs = require('fs');
 var path = require('path');
-var emailDir = path.join(__dirname, '../views/');
+var emailDir = path.join(__dirname, '../views/emails/');
 
 var emailClient = require('../lib/emailClient');
 
@@ -14,11 +14,11 @@ var replyTemplate;
 var questionTemplate;
 var mongoose = require('mongoose');
 
-fs.readFile(emailDir + '/email-question.txt', 'utf8', function (err, source) {
+fs.readFile(emailDir + '/email-question.hbs', 'utf8', function (err, source) {
   questionTemplate = hbs.handlebars.compile(source);
 });
 
-fs.readFile(emailDir + '/email-reply.txt', 'utf8', function (err, source) {
+fs.readFile(emailDir + '/email-reply.hbs', 'utf8', function (err, source) {
   replyTemplate = hbs.handlebars.compile(source);
 });
 
