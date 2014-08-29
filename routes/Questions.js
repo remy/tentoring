@@ -26,8 +26,6 @@ questions.param('token', function (req, res, next) {
 });
 
 questions.post('/', function (req, res, next) {
-  var now = Date.now();
-
   var body = {
     text: req.body.question,
     by: req.session.user._id,
@@ -37,40 +35,11 @@ questions.post('/', function (req, res, next) {
   Questions
     .create(body)
     .exec(function (err, question) {
-
       if (err) {
         return next(err);
       }
-
-      Users
-        .findOne({
-          'orgs.skills': question.skill,
-          'orgs.org': req.org._id
-        })
-        .where('orgs.asked').lt(now)
-        .ne('email', req.query.email)
-        .exec(userCallback);
-
-      function userCallback (err, user) {
-
-        if (err || !user) {
-          return next(err);
-        }
-
-        user.asked = now;
-        user.save();
-
-        email.sendQuestion({
-          user: user,
-          question: question
-        });
-
-        // TODO: This should redirect to
-        // http://tentoring.dev/questions/:questionid
-        res.render('asked');
-
-      }
-
+      req.question = question;
+      next();
     });
 });
 
