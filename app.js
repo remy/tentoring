@@ -51,7 +51,6 @@ app.use(session({
 
 app.use(express.static(path.join(__dirname, 'public')));
 middleware(app);
-app.use(app.router);
 
 app.set('title', 'Tentoring');
 
