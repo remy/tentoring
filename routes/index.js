@@ -5,11 +5,9 @@ var hbs = require('hbs');
 var fs = require('fs');
 var path = require('path');
 var emailDir = path.join(__dirname, '../views/');
-var SendGrid = require('sendgrid').SendGrid;
-var sendgrid = new SendGrid(
-     process.env.SENDGRID_USERNAME,
-     process.env.SENDGRID_PASSWORD
-);
+
+var emailClient = require('../lib/emailClient');
+
 var marked = require('marked');
 var _ = require('lodash');
 var replyTemplate;
@@ -180,7 +178,7 @@ module.exports = function (app) {
             // send email to that person
             console.log('Sending question to ' + user.name);
 
-            sendgrid.send({
+            emailClient.send({
               from: 'email-cat@tentoring.com',
               to: user.email,
               subject: 'Your mentoring skills are required',
@@ -268,7 +266,7 @@ module.exports = function (app) {
         // send email to that person
         console.log('Sending reply to ' + user.name + ' from ' + question.reply.by.name);
 
-        sendgrid.send({
+        emailClient.send({
           from: 'email-cat@tentoring.com',
           to: user.email,
           subject: 'Your question has been answered',
