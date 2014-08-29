@@ -86,4 +86,20 @@ questions.get('/:token', function (req, res, next) {
   // Render the page to give an answer
 });
 
+questions.put('/:token', function (req, res, next) {
+  if (req.body.reply) {
+    req.question.reply = {
+      by: req.session.user._id,
+      text: req.body.reply
+    };
+    req.question.answered = true;
+    req.question.save();
+    email.sendReply({
+      user: req.session.user,
+      question: req.question
+    });
+    res.render('thank-you', req.question);
+  }
+});
+
 module.exports = questions;
