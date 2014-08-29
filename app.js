@@ -14,16 +14,18 @@ mongoose.connect(mongourl);
 
 var app = express();
 
-app.configure('development', function() {
+var env = process.env.NODE_ENV || 'development';
+
+if (env === 'development') {
   app.use(express.errorHandler());
   app.set('root', (process.env.HOST || 'tentoring.dev') + ':' + port);
   mongoose.set('debug', true);
-});
+}
 
-app.configure('production', function () {
+if (env === 'production') {
   app.set('root', 'tentoring.com');
   app.set('url', 'http://tentoring.com');
-});
+}
 
 app.configure(function(){
   app.set('url', 'http://' + app.get('root'));
