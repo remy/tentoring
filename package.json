@@ -15,7 +15,7 @@
     "connect-mongo": "~0.3.2",
     "sendgrid": "~0.2.7",
     "express-subdomain-handler": "~0.1.0",
-    "express": "~3.5.0",
+    "express": "~4.8.6",
     "lodash": "~2.4.1",
     "when": "~3.0.1"
   }
