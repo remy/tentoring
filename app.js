@@ -23,7 +23,7 @@ var app = express();
 var env = process.env.NODE_ENV || 'development';
 
 if (env === 'development') {
-  app.use(express.errorHandler());
+  app.use(errorHandler());
   app.set('root', (process.env.HOST || 'tentoring.dev') + ':' + port);
   mongoose.set('debug', true);
 }
@@ -36,11 +36,11 @@ if (env === 'production') {
 app.set('url', 'http://' + app.get('root'));
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
-app.use(express.favicon());
-app.use(express.logger('dev'));
-app.use(express.bodyParser());
-app.use(express.cookieParser('spa6kugo3chi4rti8wajy1no5ku'));
-app.use(express.session({
+app.use(favicon(__dirname + '/public/im/pie.png'));
+app.use(logger('dev'));
+app.use(bodyParser());
+app.use(cookieParser('spa6kugo3chi4rti8wajy1no5ku'));
+app.use(session({
   cookie: { maxAge: 365 * 24 * 60 * 60 * 1000 },
   store: new MongoStore({
     mongoose_connection: db // jshint ignore:line
