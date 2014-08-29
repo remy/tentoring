@@ -73,6 +73,17 @@ questions.post('/', function (req, res, next) {
 });
 
 questions.get('/:token', function (req, res, next) {
+  var user = req.session.user;
+  if (req.question.by._id === user.id) {
+    // Then the question was asked by this user
+    if (req.question.answered) {
+      // Render the question with answer
+    } else {
+      // Render the question and let them
+      // know it's still no answered.
+    }
+  }
+  // Render the page to give an answer
 });
 
 module.exports = questions;
