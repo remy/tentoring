@@ -12,6 +12,7 @@ questions.param('token', function (req, res, next) {
     .findOne({ token: req.params.token })
     .populate('by')
     .exec(function (err, question) {
+      // TODO: handle no question with 404
       if (err) {
         return next(err);
       }
