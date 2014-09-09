@@ -34,16 +34,18 @@ var schema = new Schema({
       ref:  'User'
     },
     text: String
-  }
-});
-
-schema.pre('save', function (next) {
-  if (!this.token) {
-    this.token = crypto.createHash('sha1').update(Date.now()+'').digest('hex').substr(0,6);
-  }
-
-  this.created = new Date();
-  next();
+  },
+  asked: [{
+    user: {
+      type: ObjectId,
+      ref: 'User'
+    },
+    accepted: Boolean,
+    date: {
+      type: Date,
+      default: Date.now
+    }
+  }]
 });
 
 mongoose.model('Question', schema);
