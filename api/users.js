@@ -3,6 +3,7 @@ var express = require('express');
 var Users = require('../models/Users');
 
 var users = express.Router();
+users.path = '/users';
 
 users.post('/', function (req, res) {
   if (!req.body.skills) {

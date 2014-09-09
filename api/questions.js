@@ -7,6 +7,7 @@ var Users = require('../models/Users');
 var email = require('../lib/emailClient');
 
 var questions = express.Router();
+questions.path = '/path';
 
 // TODO make sure all these routes require auth
 
