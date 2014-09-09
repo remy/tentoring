@@ -1,6 +1,6 @@
 'use strict';
-var User = require('../db/user');
-var Question = require('../db/question');
+var User = require('../models/Users');
+var Question = require('../models/Questions');
 var hbs = require('hbs');
 var fs = require('fs');
 var path = require('path');
