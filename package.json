@@ -23,6 +23,7 @@
     "express-session": "~1.7.6",
     "errorhandler": "~1.1.1",
     "serve-favicon": "~2.1.1",
-    "morgan": "~1.2.3"
+    "morgan": "~1.2.3",
+    "indexjs": "0.0.3"
   }
 }
