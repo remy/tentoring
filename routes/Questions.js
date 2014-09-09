@@ -3,7 +3,7 @@ var express = require('express');
 var Questions = require('../models/Questions');
 var Users = require('../models/Users');
 
-var email = require('../lib/email');
+var email = require('../lib/emailClient');
 
 var questions = express.Router();
 
@@ -26,15 +26,14 @@ questions.param('token', function (req, res, next) {
 });
 
 questions.post('/', function (req, res, next) {
-  var body = {
+  var questionData = {
     text: req.body.question,
     by: req.session.user._id,
     skill: req.body.skill
   };
 
   Questions
-    .create(body)
-    .exec(function (err, question) {
+    .create(questionData, function (err, question) {
       if (err) {
         return next(err);
       }
