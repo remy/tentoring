@@ -160,59 +160,6 @@ module.exports = function (app) {
     }
   });
 
-  app.post('/reply/:token', auth, function (req, res) {
-    var question = req.question;
-    if (question) {
-      // save reply
-      question.reply = {
-        by: req.session.user._id,
-        text: req.body.reply
-      };
-      question.answered = true;
-
-      question.save();
-
-      // then send email to who it was made by
-      req.question.populate({
-        path: 'by'
-      }, function (err, question) {
-        var user = question.by;
-
-        var body = replyTemplate({
-          reply: {
-            by: {
-              name: req.session.user.name
-            },
-            text: req.body.reply
-          },
-          user: user,
-          question: question,
-          settings: app.settings
-        }, {});
-
-        // send email to that person
-        console.log('Sending reply to ' + user.name + ' from ' + question.reply.by.name);
-
-        emailClient.send({
-          from: 'email-cat@tentoring.com',
-          to: user.email,
-          subject: 'Your question has been answered',
-          text: body
-        }, function (err, message) {
-          if (err) {
-            console.error(message);
-          }
-        });
-      });
-      res.render('thank-you', question);
-    } else {
-      res.render('error', {
-        message: 'Sorry, I couldn\'t find your question, but I found this cat instead',
-        title: 'It went wrong'
-      });
-    }
-  });
-
   app.get('/thanks', function(req, res){
     Question.findOne({}, function (err, question) {
       question.populate({
