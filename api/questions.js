@@ -123,11 +123,15 @@ questions.put('/:token', function (req, res, next) {
       title: 'It went wrong'
     });
   }
-  if (req.body.rejected) {
+  if (req.query.reject) {
     var now = Date.now();
-    req.question.asked.filter(function (item) {
+    var rejectedItem = req.question.asked.filter(function (item) {
       return item.user.equals(req.session.user._id);
-    })[0].rejected = true;
+    })[0];
+    if (!rejectedItem) {
+      return res.send(403);
+    }
+    rejectedItem.rejected = true;
     Users
       .findOne({
         'orgs.skills': req.question.skill,
