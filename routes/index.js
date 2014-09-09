@@ -161,13 +161,7 @@ module.exports = function (app) {
   });
 
   app.get('/thanks', function(req, res){
-    Question.findOne({}, function (err, question) {
-      question.populate({
-        path: 'by'
-      }, function (err, question) {
-        res.render('thank-you', question);
-      });
-    });
+    res.render('thank-you', question);
   });
 
   app.post('/reply', function (req, res) {
