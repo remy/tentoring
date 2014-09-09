@@ -40,7 +40,7 @@ var $form = $('form#countdown');
 $form.on('submit', function (event) {
   event.preventDefault();
   $.ajax({
-    url: '/questions/' + token,
+    url: '/api/questions/' + token,
     type: 'PUT',
     data: {
       reply: $form.find('textarea.reply').val()
