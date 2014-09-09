@@ -64,6 +64,10 @@ questions.post('/', function (req, res, next) {
       user.asked = now;
       user.save();
 
+      req.question.asked.push({
+        user: user._id,
+      });
+
       email.sendQuestion({
         user: user,
         question: req.question
