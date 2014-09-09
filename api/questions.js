@@ -166,7 +166,7 @@ questions.put('/:token', function (req, res, next) {
 
       });
   }
-  if(req.body.reply) {
+  else if(req.body.reply) {
     req.question.reply = {
       by: req.session.user._id,
       text: req.body.reply
