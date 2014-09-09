@@ -45,6 +45,10 @@ module.exports = function (app) {
     });
   });
 
+  app.get('/reject', function (req, res) {
+    res.render('reject');
+  });
+
   // 404
   app.get('/cat', function(req, res){
     res.render('cat', {
