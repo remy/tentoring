@@ -116,7 +116,16 @@ questions.get('/:token', function (req, res, next) {
 });
 
 questions.put('/:token', function (req, res, next) {
-  if (req.question && req.body.reply) {
+  if (!req.question) {
+    return res.render('error', {
+      message: 'Sorry, I couldn\'t find your question, but I found this cat instead',
+      title: 'It went wrong'
+    });
+  }
+  if (req.body.rejected) {
+
+  }
+  if(req.body.reply) {
     req.question.reply = {
       by: req.session.user._id,
       text: req.body.reply
@@ -130,11 +139,6 @@ questions.put('/:token', function (req, res, next) {
     });
     */
     res.render('thank-you', req.question);
-  } else {
-    res.render('error', {
-      message: 'Sorry, I couldn\'t find your question, but I found this cat instead',
-      title: 'It went wrong'
-    });
   }
 });
 
