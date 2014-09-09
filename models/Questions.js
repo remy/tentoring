@@ -40,7 +40,10 @@ var schema = new Schema({
       type: ObjectId,
       ref: 'User'
     },
-    accepted: Boolean,
+    rejected: {
+      type: Boolean,
+      default: false
+    },
     date: {
       type: Date,
       default: Date.now
