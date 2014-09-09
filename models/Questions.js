@@ -4,14 +4,24 @@ var mongoose = require('mongoose'),
     ObjectId = Schema.ObjectId,
     crypto = require('crypto');
 
+var createToken = function () {
+  return crypto.createHash('sha1').update(Date.now()+'').digest('hex').substr(0,6);
+};
+
 var schema = new Schema({
   event: {
     type: ObjectId,
     ref: 'Event'
   },
-  created: Date,
+  created: {
+    type: Date,
+    default: Date.now
+  },
   text: String,
-  token: String,
+  token: {
+    type: String,
+    default: createToken
+  },
   by: {
     type: ObjectId,
     ref: 'User'
