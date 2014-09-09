@@ -1,4 +1,5 @@
 var express = require('express');
+var marked = require('marked');
 
 var Questions = require('../models/Questions');
 var Users = require('../models/Users');
@@ -37,12 +38,14 @@ questions.post('/', function (req, res, next) {
       if (err) {
         return next(err);
       }
+      console.log(question);
       req.question = question;
       next();
     });
 
 }, function (req, res, next) {
   var now = Date.now();
+  console.log(req.org);
   Users
     .findOne({
       'orgs.skills': req.question.skill,
@@ -52,9 +55,9 @@ questions.post('/', function (req, res, next) {
     .ne('email', req.session.user.email)
     .exec(function (err, user) {
       if (err || !user) {
-          return res.render('error', {
-            message: 'Annoyingly there isn\'t anyone available for that skill just yet, but hold on tight, more mentors are coming!'
-          });
+        return res.render('error', {
+          message: 'Annoyingly there isn\'t anyone available for that skill just yet, but hold on tight, more mentors are coming!'
+        });
       }
 
       user.asked = now;
@@ -74,31 +77,59 @@ questions.post('/', function (req, res, next) {
 
 questions.get('/:token', function (req, res, next) {
   var user = req.session.user;
-  if (req.question.by._id === user.id) {
-    // Then the question was asked by this user
-    if (req.question.answered) {
-      // Render the question with answer
+  if (req.question) {
+    if (req.question.by._id === user.id) {
+      // Then the question was asked by this user
+      if (req.question.answered) {
+        // Render the question with answer
+      } else {
+        // Render the question and let them
+        // know it's still no answered.
+      }
+      next();
     } else {
-      // Render the question and let them
-      // know it's still no answered.
-    }
+      if (req.question.answered) {
+        if (user.id === req.question.answerer._id) {
+          res.render('thank-you', req.question);
+        } else {
+          // TODO what to render??
+          req.question.text_md = marked(req.question.text);
+          res.render('reply', req.question.toObject());
+        }
+      } else {
+        // TODO use a markdown helper in handlebars instead of doing here
+        req.question.text_md = marked(req.question.text);
+        res.render('reply', req.question.toObject());
+      }
+    } 
+  } else {
+    res.render('error', {
+      message: 'Sorry, I couldn\'t find your question, but I found this cat instead',
+      title: 'It went wrong'
+    });
   }
-  // Render the page to give an answer
 });
 
 questions.put('/:token', function (req, res, next) {
-  if (req.body.reply) {
+  if (req.question && req.body.reply) {
     req.question.reply = {
       by: req.session.user._id,
       text: req.body.reply
     };
     req.question.answered = true;
     req.question.save();
+    /*
     email.sendReply({
       user: req.session.user,
       question: req.question
     });
+    */
     res.render('thank-you', req.question);
+  } else {
+    res.render('error', {
+      message: 'Sorry, I couldn\'t find your question, but I found this cat instead',
+      title: 'It went wrong'
+    });
   }
 });
 
