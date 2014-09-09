@@ -4,8 +4,8 @@ var when = require('when');
 var mongoose = require('mongoose'),
     db = mongoose.connection,
     mongourl = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/tentoring';
-var Org = require('./db/org');
-var Event = require('./db/event');
+var Orgs = require('./models/Orgs');
+var Events = require('./models/Events');
 
 
 mongoose.connect(mongourl);
@@ -20,10 +20,10 @@ function load() {
   var defer1 = when.defer();
   var defer2 = when.defer();
 
-  new Event({
+  Events.create({
     slug: 'tentoring-default'
-  }).save(function (err, doc) {
-    new Org({
+  }, function (err, doc) {
+    Orgs.create({
       slug: 'tentoring',
       config: {
         title: 'Tentoring',
@@ -31,16 +31,16 @@ function load() {
         skills: ['Funding', 'Legal', 'Technology', 'Design', 'Marketing', 'Product', 'Social', 'Government', 'Introductions', 'Strategy', 'Media']
       },
       events: [doc]
-    }).save(function () {
+    }, function () {
       defer1.resolve();
     });
 
   });
 
-  new Event({
+  Events.create({
     slug: 'gfncamden-1'
-  }).save(function (err, doc) {
-    new Org({
+  }, function (err, doc) {
+    Orgs.create({
       slug: 'gfncamden',
       config: {
         title: 'Ten Minute Mentoring for GFN Camden',
@@ -48,7 +48,7 @@ function load() {
         skills: ['Funding', 'Legal', 'Technology', 'Design', 'Marketing', 'Product', 'Social', 'Government', 'Introductions', 'Strategy', 'Media', 'Education', 'Social enterprise']
       },
       events: [doc]
-    }).save(function () {
+    }, function () {
       defer2.resolve();
     });
 
