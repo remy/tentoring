@@ -40,6 +40,36 @@ questions.post('/', function (req, res, next) {
       req.question = question;
       next();
     });
+
+}, function (req, res, next) {
+  var now = Date.now();
+  Users
+    .findOne({
+      'orgs.skills': req.question.skill,
+      'orgs.org': req.org._id
+    })
+    .where('orgs.asked').lt(now)
+    .ne('email', req.session.user.email)
+    .exec(function (err, user) {
+      if (err || !user) {
+          return res.render('error', {
+            message: 'Annoyingly there isn\'t anyone available for that skill just yet, but hold on tight, more mentors are coming!'
+          });
+      }
+
+      user.asked = now;
+      user.save();
+
+      email.sendQuestion({
+        user: user,
+        question: req.question
+      });
+
+      // TODO: This should redirect to
+      // http://tentoring.dev/questions/:questionid
+      res.render('asked');
+
+    });
 });
 
 questions.get('/:token', function (req, res, next) {
