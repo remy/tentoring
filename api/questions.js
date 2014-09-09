@@ -124,7 +124,47 @@ questions.put('/:token', function (req, res, next) {
     });
   }
   if (req.body.rejected) {
+    var now = Date.now();
+    req.question.asked.filter(function (item) {
+      return item.user.equals(req.session.user._id);
+    })[0].rejected = true;
+    Users
+      .findOne({
+        'orgs.skills': req.question.skill,
+        'orgs.org': req.org._id
+      })
+      .where('orgs.asked').lt(now)
+      .ne('email', req.session.user.email)
+      .nin('_id', req.question.asked.map(function (item) {
+        return item.user;
+      }))
+      .exec(function (err, user) {
+        if (err || !user) {
+          return res.render('error', {
+            message: 'Annoyingly there isn\'t anyone available for that skill just yet, but hold on tight, more mentors are coming!'
+          });
+        }
 
+        user.asked = now;
+        user.save();
+
+        req.question.asked.push({
+          user: user._id,
+        });
+        req.question.save();
+
+        /*
+        email.sendQuestion({
+          user: user,
+          question: req.question
+        });
+        */
+
+        // TODO: This should redirect to
+        // http://tentoring.dev/questions/:questionid
+        res.render('asked');
+
+      });
   }
   if(req.body.reply) {
     req.question.reply = {
