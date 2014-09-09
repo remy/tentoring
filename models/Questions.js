@@ -18,6 +18,7 @@ var schema = new Schema({
     default: Date.now
   },
   text: String,
+  skill: String,
   token: {
     type: String,
     default: createToken
