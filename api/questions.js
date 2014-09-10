@@ -150,6 +150,7 @@ questions.put('/:token', function (req, res, next) {
           });
         }
 
+        // TODO - this is redundant
         user.asked = now;
         user.save();
 
@@ -171,7 +172,7 @@ questions.put('/:token', function (req, res, next) {
 
       });
   }
-  else if(req.body.reply) {
+  else if (req.body.reply) {
     req.question.reply = {
       by: req.session.user._id,
       text: req.body.reply
