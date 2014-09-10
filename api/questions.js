@@ -129,7 +129,7 @@ questions.get('/:token', function (req, res, next) {
       next();
     } else {
       if (req.question.answered) {
-        if (user.id === req.question.answerer._id) {
+        if (req.question.answerer && user.id === req.question.answerer._id) {
           res.render('thank-you', req.question);
         } else {
           // TODO what to render??
