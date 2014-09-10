@@ -49,6 +49,10 @@ module.exports = function (app) {
     res.render('pass');
   });
 
+  app.get('/postpone', function (req, res) {
+    res.render('postpone');
+  });
+
   // 404
   app.get('/cat', function(req, res){
     res.render('cat', {
