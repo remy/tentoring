@@ -1,10 +1,40 @@
+var fs = require('fs');
+var path = require('path');
+
 var express = require('express');
+var hbs = require('hbs');
 var marked = require('marked');
 
 var Questions = require('../models/Questions');
 var Users = require('../models/Users');
 
-var email = require('../lib/emailClient');
+var emailClient = require('../lib/emailClient');
+
+var emailDir = path.join(__dirname + '/../views/emails');
+
+var questionEmailTemplate = hbs.handlebars.compile(fs.readFileSync(emailDir + '/email-question.hbs').toString());
+var replyEmailTemplate = hbs.handlebars.compile(fs.readFileSync(emailDir + '/email-reply.hbs').toString());
+
+var email = {
+  sendQuestion: function (options) {
+    var content = questionEmailTemplate(options);
+    emailClient.send({
+      to: options.user.email,
+      from: 'mail@tentoring.com',
+      subject: 'Your mentoring skills are required',
+      text: content
+    });
+  },
+  sendReply: function (options) {
+    var content = replyEmailTemplate(options);
+    emailClient.send({
+      to: options.user.email,
+      from: 'mail@tentoring.com',
+      subject: 'Your question has been answered',
+      text: content
+    });
+  }
+};
 
 var questions = express.Router();
 questions.path = '/questions';
