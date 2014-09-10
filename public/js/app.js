@@ -36,6 +36,8 @@ function countdown() {
 
 }
 
+var token = window.location.href.split('/').pop();
+
 var $form = $('form#countdown');
 $form.on('submit', function (event) {
   event.preventDefault();
