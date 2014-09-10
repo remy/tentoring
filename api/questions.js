@@ -126,7 +126,7 @@ questions.put('/:token', function (req, res, next) {
   if (req.query.reject) {
     var now = Date.now();
     var rejectedItem = req.question.asked.filter(function (item) {
-      return item.user.equals(req.session.user._id);
+      return item.user.equals(req.session.user._id) && item.rejected === false;
     })[0];
     if (!rejectedItem) {
       return res.send(403);
