@@ -13,6 +13,10 @@ var schema = new Schema({
     type: ObjectId,
     ref: 'Event'
   },
+  org: {
+    type: ObjectId,
+    ref: 'Org'
+  },
   created: {
     type: Date,
     default: Date.now
