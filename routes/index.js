@@ -22,9 +22,18 @@ module.exports = function (app) {
     }
   });
 
+  app.get('/reply/:token', function (req, res) {
+    res.redirect(app.settings.url + '/api/questions/' + req.params.token);
+  });
+
   app.get('/signin', function (req, res) {
     res.render('index', {
       login: true
+    });
+  });
+
+  app.get('/admin', function (req, res) {
+    res.render('admin', { 
     });
   });
 
