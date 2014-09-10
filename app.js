@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var routes = require('./routes');
+var api = require('./api');
 var middleware = require('./lib/middleware');
 var http = require('http');
 var path = require('path');
@@ -64,9 +65,6 @@ db.once('open', function () {
 
 var server = http.createServer(app).listen(port, function(){
   console.log('Server listening on http://localhost:' + server.address().port);
-  var api = require('./api');
   app.use('/api', api);
   routes(app);
 });
-
-module.exports = app;
