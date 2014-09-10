@@ -189,12 +189,10 @@ questions.put('/:token', function (req, res, next) {
         });
         req.question.save();
 
-        /*
         email.sendQuestion({
           user: user,
           question: req.question
         });
-        */
 
         // TODO: This should redirect to
         // http://tentoring.dev/questions/:questionid
@@ -209,12 +207,12 @@ questions.put('/:token', function (req, res, next) {
     };
     req.question.answered = true;
     req.question.save();
-    /*
+
     email.sendReply({
       user: req.session.user,
       question: req.question
     });
-    */
+
     res.render('thank-you', req.question);
   }
 });
