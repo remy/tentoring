@@ -17,6 +17,7 @@ var replyEmailTemplate = hbs.handlebars.compile(fs.readFileSync(emailDir + '/ema
 
 var email = {
   sendQuestion: function (options) {
+    options.settings = app.settings;
     var content = questionEmailTemplate(options);
     emailClient.send({
       to: options.user.email,
@@ -26,6 +27,7 @@ var email = {
     });
   },
   sendReply: function (options) {
+    options.settings = app.settings;
     var content = replyEmailTemplate(options);
     emailClient.send({
       to: options.user.email,
