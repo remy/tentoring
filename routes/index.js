@@ -64,4 +64,16 @@ module.exports = function (app) {
     res.render('please');
   });
 
+  app.get('/about', function (req, res) {
+    res.render('about');
+  });
+
+  app.get('/asking-questions', function (req, res) {
+    res.render('asking-questions');
+  });
+
+  app.get('/contact', function (req, res) {
+    res.render('contact');
+  });
+
 };
