@@ -24,3 +24,4 @@ schema.static('findByOrg', function (id, callback) {
 
 mongoose.model('User', schema);
 module.exports = mongoose.model('User');
+

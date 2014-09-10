@@ -4,14 +4,29 @@ var mongoose = require('mongoose'),
     ObjectId = Schema.ObjectId,
     crypto = require('crypto');
 
+var createToken = function () {
+  return crypto.createHash('sha1').update(Date.now()+'').digest('hex').substr(0,6);
+};
+
 var schema = new Schema({
   event: {
     type: ObjectId,
     ref: 'Event'
   },
-  created: Date,
+  org: {
+    type: ObjectId,
+    ref: 'Org'
+  },
+  created: {
+    type: Date,
+    default: Date.now
+  },
   text: String,
-  token: String,
+  skill: String,
+  token: {
+    type: String,
+    default: createToken
+  },
   by: {
     type: ObjectId,
     ref: 'User'
@@ -24,16 +39,21 @@ var schema = new Schema({
       ref:  'User'
     },
     text: String
-  }
-});
-
-schema.pre('save', function (next) {
-  if (!this.token) {
-    this.token = crypto.createHash('sha1').update(Date.now()+'').digest('hex').substr(0,6);
-  }
-
-  this.created = new Date();
-  next();
+  },
+  asked: [{
+    user: {
+      type: ObjectId,
+      ref: 'User'
+    },
+    rejected: {
+      type: Boolean,
+      default: false
+    },
+    date: {
+      type: Date,
+      default: Date.now
+    }
+  }]
 });
 
 mongoose.model('Question', schema);

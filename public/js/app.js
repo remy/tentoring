@@ -36,6 +36,20 @@ function countdown() {
 
 }
 
+var token = window.location.href.split('/').pop();
+
+var $form = $('form#countdown');
+$form.on('submit', function (event) {
+  event.preventDefault();
+  $.ajax({
+    url: '/api/questions/' + token,
+    type: 'PUT',
+    data: {
+      reply: $form.find('textarea.reply').val()
+    }
+  });
+});
+
 
 if (document.getElementById('countdown')) {
   countdown();
