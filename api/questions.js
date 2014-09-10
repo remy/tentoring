@@ -5,6 +5,7 @@ var express = require('express');
 var hbs = require('hbs');
 var marked = require('marked');
 
+var app = require('../app');
 var Questions = require('../models/Questions');
 var Users = require('../models/Users');
 
