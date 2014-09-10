@@ -5,7 +5,6 @@ var express = require('express');
 var hbs = require('hbs');
 var marked = require('marked');
 
-var app = require('../app');
 var Questions = require('../models/Questions');
 var Users = require('../models/Users');
 
@@ -18,7 +17,7 @@ var replyEmailTemplate = hbs.handlebars.compile(fs.readFileSync(emailDir + '/ema
 
 var email = {
   sendQuestion: function (options) {
-    options.settings = app.settings;
+    options.settings = options.req.app.settings;
     var content = questionEmailTemplate(options);
     emailClient.send({
       to: options.user.email,
@@ -28,7 +27,7 @@ var email = {
     });
   },
   sendReply: function (options) {
-    options.settings = app.settings;
+    options.settings = options.req.app.settings;
     var content = replyEmailTemplate(options);
     emailClient.send({
       to: options.user.email,
@@ -103,6 +102,7 @@ questions.post('/', function (req, res, next) {
       req.question.save();
 
       email.sendQuestion({
+        req: req,
         user: user,
         question: req.question
       });
@@ -193,6 +193,7 @@ questions.put('/:token', function (req, res, next) {
         req.question.save();
 
         email.sendQuestion({
+          req: req,
           user: user,
           question: req.question
         });
@@ -212,6 +213,7 @@ questions.put('/:token', function (req, res, next) {
     req.question.save();
 
     email.sendReply({
+      req: req,
       user: req.session.user,
       question: req.question
     });
