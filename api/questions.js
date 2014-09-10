@@ -144,6 +144,7 @@ questions.put('/:token', function (req, res, next) {
       }))
       .exec(function (err, user) {
         if (err || !user) {
+          req.question.save();
           return res.render('error', {
             message: 'Annoyingly there isn\'t anyone available for that skill just yet, but hold on tight, more mentors are coming!'
           });
