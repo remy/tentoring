@@ -1,6 +1,6 @@
 {
   "name": "10minutementor",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "main": "app.js",
   "private": true,
   "scripts": {
