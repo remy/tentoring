@@ -23,6 +23,78 @@
   padding: 4em 0;
 }
 
+nav {
+  background: rgba(0,0,0,0.3);
+  color: white;
+  margin-top: 40px;
+}
+
+nav ul {
+  width: 500px;
+  margin: 0 auto;
+  overflow: hidden;  
+}
+
+nav li {
+  display: block;
+  float: left;
+}
+
+nav li:before {
+  content: ' \2022';
+  padding: 0 20px;
+}
+
+nav li:first-child:before {
+  content: none;
+}
+
+nav a {
+  text-decoration: underline;
+  color: white;
+  display: inline-block;
+  padding: 10px 0;
+}
+
+nav a:hover {
+  color: white;
+}
+
+#how {
+  counter-reset: ol;
+}
+
+#how li {
+  list-style: numerical;
+  padding-left: 100px;
+  padding-right: 40px;
+  text-align: center;
+  background: url(../im/pie.svg) no-repeat;
+  background-size: 70px;
+  background-position: 0 0;
+  list-style-type: none;
+  position: relative;
+}
+
+#how li:before {
+  counter-increment: ol;
+  content: counter(ol);
+  font-family: "brandon-grotesque", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  position: absolute;
+  left: 0;
+  text-align: center;
+  width: 70px;
+  height: 70px;
+  line-height: 70px;
+  font-size: 30px;
+  color: #fff;
+}
+
+#how h2 {
+  font-size: 24px;
+}
+
+
 @media only screen and (max-width: 48em) {
   .main {
     padding: 0;
@@ -68,8 +140,8 @@ html {
   background-image:url(/im/us.jpg);
   background-size: cover;
   background-repeat: no-repeat;
-  height: 100%;
-  background-attachment: fixed;
+  min-height: 100%;
+  /* background-attachment: fixed; */
 }
 
 body {
