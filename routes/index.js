@@ -45,8 +45,8 @@ module.exports = function (app) {
     });
   });
 
-  app.get('/reject', function (req, res) {
-    res.render('reject');
+  app.get('/pass', function (req, res) {
+    res.render('pass');
   });
 
   // 404
