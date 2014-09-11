@@ -1,5 +1,7 @@
 'use strict';
 
+var Questions = require('../models/Questions');
+
 module.exports = function (app) {
 
   function auth(req, res, next) {
@@ -66,6 +68,15 @@ module.exports = function (app) {
   app.get('/cat', function(req, res){
     res.render('cat', {
       message: 'Whoa, nothing found, sorry. Cat?'
+    });
+  });
+
+  app.get('/thankyou/:token', function (req, res) {
+    Questions.findOne({token: req.params.token}).populate('by').exec(function (err, question, next) {
+      if (err) {
+        return next(err);
+      }
+      res.render('thank-you', question);
     });
   });
 
