@@ -221,7 +221,7 @@ questions.put('/:token', function (req, res, next) {
         question: question
       });
 
-      res.render('thank-you', question);
+      res.send(200);
     });
 
   }
