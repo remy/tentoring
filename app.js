@@ -16,6 +16,7 @@ var MongoStore = require('connect-mongo')(session);
 var db = mongoose.connection;
 var port = process.env.PORT || 8000;
 var mongourl = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/tentoring';
+var pkg = require('./package.json');
 
 mongoose.connect(mongourl);
 
@@ -34,6 +35,7 @@ if (env === 'production') {
   app.set('url', 'http://tentoring.com');
 }
 
+app.set('version', pkg.version);
 app.set('url', 'http://' + app.get('root'));
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
