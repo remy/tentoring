@@ -34,7 +34,7 @@ users.post('/', function (req, res) {
         message: 'Creating your user kinda blew up. Sorry, look for the cat to make things better.'
       });
     } else if (!user && err.code === 11000) {
-      Users.findOne(userData.email, function (err, user) {
+      Users.findOne({email: userData.email}, function (err, user) {
         // TODO decide whether to update the user's skills
         // also check whether the user actually is in this org, and if not
         // add them in
