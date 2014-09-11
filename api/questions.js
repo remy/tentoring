@@ -213,13 +213,17 @@ questions.put('/:token', function (req, res, next) {
     req.question.answered = true;
     req.question.save();
 
-    email.sendReply({
-      req: req,
-      user: req.session.user,
-      question: req.question
+    req.question.populate('reply.by', function (err, question) {
+
+      email.sendReply({
+        req: req,
+        user: question.by,
+        question: question
+      });
+
+      res.render('thank-you', question);
     });
 
-    res.render('thank-you', req.question);
   }
 });
 
