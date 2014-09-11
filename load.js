@@ -11,28 +11,11 @@ var Events = require('./models/Events');
 mongoose.connect(mongourl);
 
 db.once('open', function () {
-  create('hatchcamp', {
-    title: 'Ten Minute Mentoring for Hatchcamp',
-    css: 'html { background-image: url(\'/im/orgs/hatchcamp.jpg\') }',
+  create('test', {
+    title: 'Ten Minute Mentoring (test)',
     skills: [
-      'Funding',
-      'Legal',
       'Technology',
       'Design',
-      'Marketing',
-      'Product',
-      // 'Social',
-      'Government',
-      'Introductions',
-      'Strategy',
-      'Media',
-
-      'Social impact',
-      'Social media',
-      'Scaling a business',
-      'Management',
-      'Events',
-
       ]
   }).then(function () {
     db.close();
@@ -42,10 +25,10 @@ db.once('open', function () {
 function create(slug, config) {
   var defer = when.defer();
 
-  new Event({
+  new Events({
     slug: slug + '-1'
   }).save(function (err, doc) {
-    new Org({
+    new Orgs({
       slug: slug,
       config: config,
       events: [doc]
