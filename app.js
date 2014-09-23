@@ -17,6 +17,7 @@ var db = mongoose.connection;
 var port = process.env.PORT || 8000;
 var mongourl = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/tentoring';
 var pkg = require('./package.json');
+var cron = require('./cron');
 
 mongoose.connect(mongourl);
 
@@ -63,6 +64,7 @@ db.on('error', console.error.bind(console, 'connection error:'));
 
 db.once('open', function () {
   console.log('Database ready');
+  cron.checkForUnanswered.start();
 });
 
 var server = http.createServer(app).listen(port, function(){
