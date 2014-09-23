@@ -72,7 +72,3 @@ var server = http.createServer(app).listen(port, function(){
   app.use('/api', api);
   routes(app);
 });
-
-var emailUnanswered = require('./util/check-for-unanswered.js')(app);
-
-// emailUnanswered();
