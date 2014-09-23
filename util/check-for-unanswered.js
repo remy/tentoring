@@ -48,6 +48,7 @@ module.exports = function (app) {
     .exec(function (err, questions) {
       console.log(arguments);
       questions.forEach(function (question) {
+        question.asked = question.asked || [];
 
         Users
         .findOne({
