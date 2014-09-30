@@ -1,5 +1,6 @@
 'use strict';
 var express = require('express');
+var app = express();
 var errorHandler = require('errorhandler');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -17,11 +18,10 @@ var db = mongoose.connection;
 var port = process.env.PORT || 8000;
 var mongourl = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/tentoring';
 var pkg = require('./package.json');
-var cron = require('./cron');
+var cron = require('./cron')(app);
 
 mongoose.connect(mongourl);
 
-var app = express();
 
 var env = process.env.NODE_ENV || 'development';
 
