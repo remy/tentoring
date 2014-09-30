@@ -60,6 +60,7 @@ questions.param('token', function (req, res, next) {
 });
 
 questions.post('/', function (req, res, next) {
+
   var questionData = {
     text: req.body.question,
     by: req.session.user._id,
