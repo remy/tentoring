@@ -24,32 +24,26 @@ get(window.location.origin + '/api/orgs', function (event) {
 
     var target = event.target;
 
-    function loaded () {
-      var str = '<li>Total questions: ' + total + '</li>';
-      str += '<li> Unanswered questions: ' + unanswered + '</li>';
-      str += '<li> Answered questions: ' + (total - unanswered) + '</li>';
-      ul.innerHTML = str;
-    }
-
     if (target.nodeName === 'A') {
       var id = target.id;
       var base = window.location.origin + '/api/orgs/' + id;
-      var count = 0;
-      var total, unanswered;
-      get(base + '/questions?count', function (event) {
-        total = event.target.responseText * 1;
-        if (++count === 2) {
-          loaded();
-        }
+      get(base + '/questions/meta', function loaded (event) {
+        var questions = JSON.parse(event.target.responseText);
+        var str = '<li>Total questions: ' + questions.total + '</li>';
+        str += '<li> Answered questions: ' + questions.answered + '</li>';
+        str += '<li> Unanswered questions: ' + (questions.total - questions.answered) + '</li>';
+        str += '<li> <ul>';
+        str += questions.skills.reduce(function (html, skill) {
+          var li = '<li>' + skill.name + '<ul>'
+          li += '<li> Total: ' + skill.total + '</li>'
+          li += '<li> Answered: ' + skill.answered + '</li>'
+          li += '<li> Unanswered: ' + (skill.total - skill.answered) + '</li>';
+          li += '</ul></li>';
+          return html + li;
+        }, '');
+        str += '</ul></li>';
+        ul.innerHTML = str;
       });
-      get(base + '/questions?count&answered=false', function (event) {
-        console.log(event.target.responseText);
-        unanswered = event.target.responseText * 1;
-        if (++count === 2) {
-          loaded();     
-        } 
-      });
-
     }
 
   });
