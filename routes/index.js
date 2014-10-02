@@ -33,6 +33,15 @@ module.exports = function (app) {
   });
 
   app.get('/admin', function (req, res) {
+    if (!req.session.user) {
+      return res.redirect('/');
+    }
+    if (!req.session.user.globalAdmin) {
+      return res.redirect('/');
+    }
+    if (req.org.admins.indexOf(req.session.user.email) === -1) {
+      return res.redirect('/');
+    }
     res.render('admin', { 
     });
   });
