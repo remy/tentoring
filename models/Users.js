@@ -15,7 +15,11 @@ var schema = new Schema({
     skills: [String],
     asked: { type: Date, default: Date.now },
     mentor: { type: Boolean, default: false }
-  }]
+  }],
+  globalAdmin: {
+    type: Boolean,
+    default: false
+  }
 });
 
 schema.static('findByOrg', function (id, callback) {
