@@ -38,11 +38,19 @@ module.exports = function (app) {
     }
   };
 
+  var cutoffDate =  new Date();
+  cutoffDate.setFullYear('2013');
+  cutoffDate.setMonth(0);
+  cutoffDate.setDate(0);
+
   var emailUnanswered = function () {
 
     Questions
     .find({
-      answered: false
+      answered: false,
+      created: {
+        $gte: cutoffDate
+      }
     })
     .ne('asked.rejected', false)
     .exec(function (err, questions) {
