@@ -57,7 +57,7 @@ orgs.get('/:id/questions', function (req, res) {
 var parseQuestionMetadata = function (result) {
   var skills = result.map(function (item) {
     return {
-      name: item._id.name,
+      name: item._id.skill || item._id.tag || '[No Tag]',
       total: item.total,
       answered: item.answered
     };
@@ -77,13 +77,14 @@ var parseQuestionMetadata = function (result) {
 orgs.get('/:id/questions/meta', function (req, res) {
   var query = Questions.aggregate([{ 
     $match: {
-      org: req.org._id
+      org: req.params._id
     }
   },
   { 
     $group: {
       _id: {
-        name: '$skill'
+        tag: '$tag',
+        skill: '$skill'
       },
       total: {
         $sum: 1
