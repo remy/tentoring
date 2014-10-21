@@ -4,6 +4,8 @@ var Orgs = require('../models/Orgs');
 var Questions = require('../models/Questions');
 var Users = require('../models/Users');
 
+var ObjectID = require('mongoose').Types.ObjectId;
+
 var orgs = express.Router();
 orgs.path = '/orgs';
 
@@ -77,7 +79,7 @@ var parseQuestionMetadata = function (result) {
 orgs.get('/:id/questions/meta', function (req, res) {
   var query = Questions.aggregate([{ 
     $match: {
-      org: req.params.id
+      org: new ObjectID(req.params.id)
     }
   },
   { 
