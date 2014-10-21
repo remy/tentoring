@@ -30,7 +30,7 @@ nav {
 }
 
 nav ul {
-  width: 500px;
+  width: 525px;
   margin: 0 auto;
   overflow: hidden;  
 }
@@ -42,7 +42,7 @@ nav li {
 
 nav li:before {
   content: ' \2022';
-  padding: 0 20px;
+  padding: 0 10px;
 }
 
 nav li:first-child:before {
@@ -216,3 +216,10 @@ label {
   line-height: 1.8em;
 }
 
+ul {
+  margin-left: 20px;
+}
+
+ul a {
+  cursor: pointer;
+}
