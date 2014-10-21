@@ -52,12 +52,13 @@ var schema = new Schema({
     date: {
       type: Date,
       default: Date.now
-    },
-    postponed: {
-      type: Boolean,
-      default: false
     }
-  }]
+  }],
+  postponed: {
+    type: Boolean,
+    default: false
+  },
+  postponedTo: Date
 });
 
 mongoose.model('Question', schema);
