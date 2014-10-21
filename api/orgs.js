@@ -77,7 +77,7 @@ var parseQuestionMetadata = function (result) {
 orgs.get('/:id/questions/meta', function (req, res) {
   var query = Questions.aggregate([{ 
     $match: {
-      org: req.params._id
+      org: req.params.id
     }
   },
   { 
