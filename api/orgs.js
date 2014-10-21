@@ -54,6 +54,60 @@ orgs.get('/:id/questions', function (req, res) {
   });
 });
 
+var parseQuestionMetadata = function (result) {
+  var skills = result.map(function (item) {
+    return {
+      name: item._id.name,
+      total: item.total,
+      answered: item.answered
+    };
+  });
+  var metadata = {
+    total: skills.reduce(function (sum, skill) {
+      return sum + skill.total;
+    }, 0),
+    answered: skills.reduce(function (sum, skill) {
+      return sum + skill.answered;
+    }, 0),
+    skills: skills
+  };
+  return metadata;
+};
+
+orgs.get('/:id/questions/meta', function (req, res) {
+  var query = Questions.aggregate([{ 
+    $match: {
+      org: req.org._id
+    }
+  },
+  { 
+    $group: {
+      _id: {
+        name: '$skill'
+      },
+      total: {
+        $sum: 1
+      },
+      answered: {
+        $sum: {
+          $cond: [
+            '$answered',
+            1,
+            0
+          ]
+        }
+      }
+    }
+  }],
+  function(err, result) {
+    if (err) {
+      return res.send(err);
+    }
+    var metadata = parseQuestionMetadata(result);
+    res.send(metadata);
+  });
+});
+
 orgs.get('/:id/users', function (req, res) {
   var query = Users.find({
     'orgs.org': req.org

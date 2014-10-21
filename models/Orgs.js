@@ -25,6 +25,7 @@ var schema = new Schema({
     }
   },
   events: [{ type: ObjectId, ref: 'Event' }],
+  admins: [String]
 });
 
 schema.pre('save', function (next) {
