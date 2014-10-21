@@ -1,6 +1,6 @@
 {
   "name": "10minutementor",
-  "version": "2.0.0",
+  "version": "2.0.5",
   "main": "app.js",
   "private": true,
   "scripts": {
@@ -24,6 +24,7 @@
     "errorhandler": "~1.1.1",
     "serve-favicon": "~2.1.1",
     "morgan": "~1.2.3",
-    "indexjs": "0.0.3"
+    "indexjs": "0.0.3",
+    "cron": "~1.0.4"
   }
 }

@@ -52,6 +52,10 @@ var schema = new Schema({
     date: {
       type: Date,
       default: Date.now
+    },
+    postponed: {
+      type: Boolean,
+      default: false
     }
   }]
 });

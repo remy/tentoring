@@ -38,16 +38,17 @@ users.post('/', function (req, res) {
         // TODO decide whether to update the user's skills
         // also check whether the user actually is in this org, and if not
         // add them in
+        user.orgs = user.orgs || [];
 
-        var found = user.orgs.filter(function (data) {
-          return (data.org.toString() === req.org._id);
-        });
+        var addOrgToUser = user.orgs.map(function (item) {
+          return item.org;
+        }).indexOf(req.org) === -1;
 
-        if (found.length === 0) {
-          // FIXME this doesn't work...
-          user.orgs.push(userData.orgs);
-          user.save();
+        if (addOrgToUser) {
+          user.orgs.push(userData.orgs[0]);
         }
+
+        user.save();
 
         req.session.user = user;
         res.redirect(req.session.afterLogin || '/next');

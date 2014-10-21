@@ -46,6 +46,9 @@ $form.on('submit', function (event) {
     type: 'PUT',
     data: {
       reply: $form.find('textarea.reply').val()
+    },
+    success: function () {
+      window.location.pathname = '/thankyou/' + token;
     }
   });
 });

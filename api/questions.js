@@ -60,6 +60,7 @@ questions.param('token', function (req, res, next) {
 });
 
 questions.post('/', function (req, res, next) {
+
   var questionData = {
     text: req.body.question,
     by: req.session.user._id,
@@ -157,6 +158,19 @@ questions.put('/:token', function (req, res, next) {
       title: 'It went wrong'
     });
   }
+  if (req.query.postpone) {
+    var now = Date.now();
+    var postponedItem = req.question.asked.filter(function (item) {
+      return item.user.equals(req.session.user._id) && item.rejected === false;
+    })[0];
+    if (!postponedItem) {
+      return res.send(403);
+    }
+    postponedItem.postponed = true;
+    postponedItem.date = now;
+    req.question.save();
+    return res.send(200);
+  }
   if (req.query.reject) {
     var now = Date.now();
     var rejectedItem = req.question.asked.filter(function (item) {
@@ -221,7 +235,7 @@ questions.put('/:token', function (req, res, next) {
         question: question
       });
 
-      res.render('thank-you', question);
+      res.send(200);
     });
 
   }
