@@ -38,14 +38,10 @@ module.exports = function (app) {
     if (!req.session.user) {
       return res.redirect('/');
     }
-    if (!req.session.user.globalAdmin) {
-      return res.redirect('/');
+    if (req.session.user.globalAdmin || req.org.admins.indexOf(req.session.user.email) !== -1) {
+      return res.render('admin', {});
     }
-    if (req.org.admins.indexOf(req.session.user.email) === -1) {
-      return res.redirect('/');
-    }
-    res.render('admin', { 
-    });
+    res.redirect('/');
   });
 
   app.get('/404', function (req, res) {
