@@ -51,7 +51,6 @@ module.exports = function (app) {
     })
     .ne('asked.rejected', false)
     .exec(function (err, questions) {
-      console.log(arguments);
       questions.forEach(function (question) {
         question.asked = question.asked || [];
 
