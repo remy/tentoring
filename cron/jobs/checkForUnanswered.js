@@ -3,12 +3,12 @@ var path = require('path');
 
 var hbs = require('hbs');
 
-var Users = require('../models/Users');
-var Questions = require('../models/Questions');
+var Users = require('../../models/Users');
+var Questions = require('../../models/Questions');
 
-var emailClient = require('../lib/emailClient');
+var emailClient = require('../../lib/emailClient');
 
-var emailDir = path.join(__dirname + '/../views/emails');
+var emailDir = path.join(__dirname + '/../../views/emails');
 
 var questionEmailTemplate = hbs.handlebars.compile(fs.readFileSync(emailDir + '/email-question.hbs').toString());
 var replyEmailTemplate = hbs.handlebars.compile(fs.readFileSync(emailDir + '/email-reply.hbs').toString());
