@@ -38,10 +38,7 @@ module.exports = function (app) {
     }
   };
 
-  var cutoffDate =  new Date();
-  cutoffDate.setFullYear('2013');
-  cutoffDate.setMonth(0);
-  cutoffDate.setDate(0);
+  var cutoffDate =  new Date(Date.parse('2014-10-21'));
 
   var emailUnanswered = function () {
 
