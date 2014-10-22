@@ -4,6 +4,8 @@ var Orgs = require('../models/Orgs');
 var Questions = require('../models/Questions');
 var Users = require('../models/Users');
 
+var ObjectId = require('mongoose').Types.ObjectId;
+
 var orgs = express.Router();
 orgs.path = '/orgs';
 
@@ -75,12 +77,12 @@ var parseQuestionMetadata = function (result) {
 };
 
 orgs.get('/:id/questions/meta', function (req, res) {
-  var query = Questions.aggregate([{ 
+  var query = Questions.aggregate([{
     $match: {
-      org: req.params.id
+      org: ObjectId(req.params.id),
     }
   },
-  { 
+  {
     $group: {
       _id: {
         tag: '$tag',
@@ -105,7 +107,21 @@ orgs.get('/:id/questions/meta', function (req, res) {
       return res.send(err);
     }
     var metadata = parseQuestionMetadata(result);
-    res.send(metadata);
+
+    Users.count({
+      orgs: {
+        $elemMatch: {
+          org: ObjectId(req.params.id)
+        }
+      }
+    }, function (error, count) {
+      if (error) {
+        count = NaN;
+      }
+      metadata.totalUsers = count;
+
+      res.send(metadata);
+    });
   });
 });
 
