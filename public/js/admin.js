@@ -10,7 +10,7 @@ get(window.location.origin + '/api/orgs', function (event) {
   var ul = document.createElement('ul');
   var content = orgs.map(function (org) {
     console.log(org);
-    return '<li><a id="' + org._id  + '">' + org.config.title + '</a></li>'; 
+    return '<li><a id="' + org._id  + '">' + org.config.title + '</a></li>';
   });
   ul.innerHTML = content.reduce(function (str, content) {
     str += content;
@@ -20,8 +20,6 @@ get(window.location.origin + '/api/orgs', function (event) {
   document.querySelector('.main-body div').appendChild(ul);
 
   ul.addEventListener('click', function (event) {
-    console.log(event);
-
     var target = event.target;
 
     if (target.nodeName === 'A') {
@@ -29,19 +27,21 @@ get(window.location.origin + '/api/orgs', function (event) {
       var base = window.location.origin + '/api/orgs/' + id;
       get(base + '/questions/meta', function loaded (event) {
         var questions = JSON.parse(event.target.responseText);
-        var str = '<li>Total questions: ' + questions.total + '</li>';
+        var str = '<li>Total users: ' + questions.totalUsers + '</li>'
+        str += '<li>Total questions: ' + questions.total + '</li>';
         str += '<li> Answered questions: ' + questions.answered + '</li>';
         str += '<li> Unanswered questions: ' + (questions.total - questions.answered) + '</li>';
-        str += '<li> <ul>';
+
         str += questions.skills.reduce(function (html, skill) {
+          html = html || '<li><ul>';
           var li = '<li>' + skill.name + '<ul>'
           li += '<li> Total: ' + skill.total + '</li>'
           li += '<li> Answered: ' + skill.answered + '</li>'
           li += '<li> Unanswered: ' + (skill.total - skill.answered) + '</li>';
-          li += '</ul></li>';
+          li += '</ul>';
           return html + li;
         }, '');
-        str += '</ul></li>';
+        str += '</ul>';
         ul.innerHTML = str;
       });
     }

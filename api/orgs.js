@@ -107,7 +107,21 @@ orgs.get('/:id/questions/meta', function (req, res) {
       return res.send(err);
     }
     var metadata = parseQuestionMetadata(result);
-    res.send(metadata);
+
+    Users.count({
+      orgs: {
+        $elemMatch: {
+          org: ObjectId(req.params.id)
+        }
+      }
+    }, function (error, count) {
+      if (error) {
+        count = NaN;
+      }
+      metadata.totalUsers = count;
+
+      res.send(metadata);
+    });
   });
 });
 
